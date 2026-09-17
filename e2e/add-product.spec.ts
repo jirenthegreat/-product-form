@@ -125,7 +125,7 @@ test('zapisany produkt trafia do tabeli, a paginacja zostaje w URL po odświeże
   await expect(page.getByText('Produkt został dodany')).toBeVisible()
   await expect(page.getByText('6 produktów w katalogu')).toBeVisible()
 
-  await page.getByRole('button', { name: 'Strona 2' }).click()
+  await page.getByRole('link', { name: 'Strona 2' }).click()
   await expect(page).toHaveURL(/\?page=2/)
   await page.reload()
 

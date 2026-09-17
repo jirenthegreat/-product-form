@@ -7,7 +7,7 @@ Zadanie rekrutacyjne: trzyetapowy formularz dodawania produktu w oknie modalnym 
 ## Stack
 
 - React 19 + TypeScript + Vite
-- [shadcn/ui](https://ui.shadcn.com) (Radix UI + Tailwind CSS v4) – komponenty w `src/components/ui`, tokeny z Figmy w `src/index.css`
+- [shadcn/ui](https://ui.shadcn.com) (Radix UI + Tailwind CSS v4) – komponenty dodane przez `npx shadcn add`, tokeny z Figmy w `src/index.css`
 - Geist (font z projektu)
 - [TanStack Form](https://tanstack.com/form) – stan formularza i kroki
 - [Zod](https://zod.dev) – schematy walidacji każdego kroku
@@ -77,6 +77,21 @@ src/
          ├─ form-context.ts       # createFormHook → useAppForm / withForm
          └─ form-fields.tsx       # pola połączone z TanStack Form
 ```
+
+## shadcn/ui
+
+Komponenty w `src/components/ui` pochodzą z CLI (`npx shadcn@latest add button input textarea label select checkbox switch dialog table badge separator sonner field toggle-group pagination`) i zachowują oryginalne API oraz warianty.
+
+Zmiany w samych plikach komponentów ograniczyłem do tego, co w projekcie z Figmy obowiązuje globalnie (każda opatrzona komentarzem):
+
+- `button` – pełne zaokrąglenie i odstęp ikony 6px,
+- `input`, `select` – wysokość 32px, pełne zaokrąglenie, padding 10px,
+- `textarea` – zaokrąglenie 10px i padding 10px,
+- `table` – nagłówki wyszarzone, komórki 48px z paddingiem 16px,
+- `dialog` – pełny ekran na mobile, 720px i zaokrąglenie 14px na desktopie (paddingi ustawiają sekcje),
+- `pagination` – polskie etykiety.
+
+Wszystko pozostałe (kolory statusów, rozmiary paginacji, chipsy cech, wygląd toasta) jest ustawiane przez `className` w miejscu użycia, żeby komponenty bazowe zostały jak najbliżej oryginału.
 
 ## Kluczowe decyzje
 

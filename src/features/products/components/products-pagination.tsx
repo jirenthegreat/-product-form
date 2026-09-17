@@ -1,8 +1,9 @@
 import {
   Pagination,
-  PaginationButton,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
+  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
@@ -16,26 +17,55 @@ type ProductsPaginationProps = {
   className?: string
 }
 
+/** Rozmiary z Figmy: elementy 32px i zaokrąglenie 8px (przyciski w projekcie są „pigułkami”). */
+const itemClass = 'size-8 rounded-md'
+const arrowClass = 'h-8 rounded-md px-2.5'
+
 export function ProductsPagination({ page, totalPages, onPageChange, className }: ProductsPaginationProps) {
+  /** Linki mają poprawny `href` (działa środkowy przycisk myszy), ale stroną steruje nuqs. */
+  const linkProps = (target: number, disabled = false) => ({
+    href: `?page=${target}`,
+    'aria-disabled': disabled || undefined,
+    onClick: (event: React.MouseEvent) => {
+      event.preventDefault()
+      if (!disabled) onPageChange(target)
+    },
+  })
+
+  const disabledClass = 'aria-disabled:pointer-events-none aria-disabled:opacity-50'
+
   return (
-    <Pagination className={cn(className)}>
-      <PaginationContent>
+    <Pagination className={cn('w-auto', className)}>
+      <PaginationContent className="gap-0.5">
         <PaginationItem>
-          <PaginationPrevious disabled={page <= 1} onClick={() => onPageChange(page - 1)} />
+          <PaginationPrevious className={cn(arrowClass, disabledClass)} {...linkProps(page - 1, page <= 1)} />
         </PaginationItem>
-        {getPageItems(page, totalPages).map((item, index) => (
-          <PaginationItem key={item === 'ellipsis' ? `ellipsis-${index}` : item}>
-            {item === 'ellipsis' ? (
-              <span className="px-1 text-muted-foreground">…</span>
-            ) : (
-              <PaginationButton isActive={item === page} aria-label={`Strona ${item}`} onClick={() => onPageChange(item)}>
+
+        {getPageItems(page, totalPages).map((item, index) =>
+          item === 'ellipsis' ? (
+            <PaginationItem key={`ellipsis-${index}`}>
+              <PaginationEllipsis className="size-8" />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={item}>
+              <PaginationLink
+                isActive={item === page}
+                aria-label={`Strona ${item}`}
+                className={cn(
+                  itemClass,
+                  // aktywna strona w projekcie jest wypełniona kolorem głównym
+                  item === page && 'border-transparent bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
+                )}
+                {...linkProps(item)}
+              >
                 {item}
-              </PaginationButton>
-            )}
-          </PaginationItem>
-        ))}
+              </PaginationLink>
+            </PaginationItem>
+          ),
+        )}
+
         <PaginationItem>
-          <PaginationNext disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} />
+          <PaginationNext className={cn(arrowClass, disabledClass)} {...linkProps(page + 1, page >= totalPages)} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

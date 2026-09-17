@@ -18,7 +18,7 @@ export function ProductsTable({ products }: { products: Product[] }) {
         <col />
         <col />
       </colgroup>
-      <TableHeader>
+      <TableHeader className="bg-table-muted">
         <TableRow className="hover:bg-transparent">
           <TableHead>Nazwa</TableHead>
           <TableHead>SKU</TableHead>
