@@ -26,7 +26,8 @@ export function AddProductDialog({ onCreated }: AddProductDialogProps) {
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader className="px-4 pt-6 pr-10 sm:h-16 sm:justify-center sm:border-b sm:pt-0">
-          <DialogTitle>Dodaj nowy produkt</DialogTitle>
+          {/* Figma: tytuł 16px / medium (shadcn domyślnie daje 18px / semibold) */}
+          <DialogTitle className="text-base font-medium">Dodaj nowy produkt</DialogTitle>
           <DialogDescription className="sr-only">Formularz dodawania produktu w trzech krokach</DialogDescription>
         </DialogHeader>
         {/*
