@@ -37,7 +37,7 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
               >
                 {status === 'complete' ? <CheckIcon className="size-4" aria-hidden /> : index + 1}
               </span>
-              <span className={cn('flex flex-col gap-0.5 whitespace-nowrap', status === 'upcoming' && 'text-muted-foreground')}>
+              <span className={cn('flex min-w-0 flex-col gap-0.5 sm:whitespace-nowrap', status === 'upcoming' && 'text-muted-foreground')}>
                 <span className="text-sm leading-5 font-medium">
                   {step.title}
                   {status === 'complete' && <span className="sr-only"> (ukończony)</span>}

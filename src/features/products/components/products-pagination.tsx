@@ -19,7 +19,8 @@ type ProductsPaginationProps = {
 
 /** Rozmiary z Figmy: elementy 32px i zaokrąglenie 8px (przyciski w projekcie są „pigułkami”). */
 const itemClass = 'size-8 rounded-md'
-const arrowClass = 'h-8 rounded-md px-2.5'
+const prevClass = 'h-8 rounded-md pr-2.5 pl-1.5'
+const nextClass = 'h-8 rounded-md pr-1.5 pl-2.5'
 
 export function ProductsPagination({ page, totalPages, onPageChange, className }: ProductsPaginationProps) {
   /** Linki mają poprawny `href` (działa środkowy przycisk myszy), ale stroną steruje nuqs. */
@@ -35,10 +36,10 @@ export function ProductsPagination({ page, totalPages, onPageChange, className }
   const disabledClass = 'aria-disabled:pointer-events-none aria-disabled:opacity-50'
 
   return (
-    <Pagination className={cn('w-auto', className)}>
+    <Pagination className={cn('mx-0 w-auto', className)}>
       <PaginationContent className="gap-0.5">
         <PaginationItem>
-          <PaginationPrevious className={cn(arrowClass, disabledClass)} {...linkProps(page - 1, page <= 1)} />
+          <PaginationPrevious className={cn(prevClass, disabledClass)} {...linkProps(page - 1, page <= 1)} />
         </PaginationItem>
 
         {getPageItems(page, totalPages).map((item, index) =>
@@ -65,7 +66,7 @@ export function ProductsPagination({ page, totalPages, onPageChange, className }
         )}
 
         <PaginationItem>
-          <PaginationNext className={cn(arrowClass, disabledClass)} {...linkProps(page + 1, page >= totalPages)} />
+          <PaginationNext className={cn(nextClass, disabledClass)} {...linkProps(page + 1, page >= totalPages)} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
