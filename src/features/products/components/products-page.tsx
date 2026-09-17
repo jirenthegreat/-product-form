@@ -31,29 +31,29 @@ export function ProductsPage() {
   )
 
   return (
-    <main className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 px-4 py-6 sm:py-12">
+    <main className="mx-auto flex w-full max-w-[1272px] flex-col gap-4 px-4 py-6 sm:gap-6 sm:py-[50px]">
       <header className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold tracking-tight">Produkty</h1>
-          <p className="text-sm text-muted-foreground">{countLabel} w katalogu</p>
+        <div className="flex min-w-0 flex-col gap-1">
+          <h1 className="text-xl leading-7 font-semibold">Produkty</h1>
+          <p className="text-sm leading-5 text-muted-foreground">{countLabel} w katalogu</p>
         </div>
         <AddProductDialog onCreated={handleCreated} />
       </header>
 
       {/* Desktop */}
-      <section aria-label="Lista produktów" className="hidden overflow-hidden rounded-xl border sm:block">
+      <section aria-label="Lista produktów" className="hidden overflow-hidden rounded-lg border bg-card shadow-xs sm:block">
         <ProductsTable products={visibleProducts} />
-        <div className="flex items-center justify-between gap-4 border-t bg-background px-3.5 py-2.5">
-          <p className="text-[11px] text-muted-foreground">{pageSummary}</p>
+        <div className="flex items-center justify-between gap-4 border-t bg-table-muted p-4">
+          <p className="text-xs leading-4 text-muted-foreground">{pageSummary}</p>
           {pagination}
         </div>
       </section>
 
       {/* Mobile */}
-      <section aria-label="Lista produktów" className="flex flex-col gap-4 sm:hidden">
+      <section aria-label="Lista produktów" className="flex flex-col gap-6 sm:hidden">
         <ProductsCardList products={visibleProducts} />
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-[11px] text-muted-foreground">{pageSummary}</p>
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-xs leading-4 text-muted-foreground">{pageSummary}</p>
           {pagination}
         </div>
       </section>

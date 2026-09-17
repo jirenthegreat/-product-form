@@ -17,7 +17,7 @@ function SelectTrigger({ className, children, ...props }: React.ComponentProps<t
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        'flex h-8 w-full cursor-pointer items-center justify-between gap-2 rounded-full border border-input bg-card px-3 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none',
+        'flex h-8 w-full cursor-pointer items-center justify-between gap-1.5 rounded-full border border-input bg-transparent pr-2 pl-2.5 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none',
         'data-[placeholder]:text-muted-foreground [&_svg:not([class*=text-])]:text-foreground',
         'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30',
         'aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:cursor-not-allowed disabled:opacity-50',

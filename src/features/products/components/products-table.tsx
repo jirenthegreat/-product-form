@@ -10,11 +10,12 @@ export function ProductsTable({ products }: { products: Product[] }) {
   return (
     <Table className="table-fixed">
       <colgroup>
-        <col className="w-[27%]" />
-        <col className="w-[13.5%]" />
-        <col className="w-[13.5%]" />
-        <col className="w-[13.5%]" />
-        <col className="w-[13.5%]" />
+        {/* kolumna nazwy ma w projekcie stałe 357px, pozostałe dzielą resztę po równo */}
+        <col className="w-[357px]" />
+        <col />
+        <col />
+        <col />
+        <col />
         <col />
       </colgroup>
       <TableHeader>
@@ -27,17 +28,17 @@ export function ProductsTable({ products }: { products: Product[] }) {
           <TableHead>Magazyn</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody className="bg-card">
+      <TableBody>
         {products.map((product) => (
           <TableRow key={product.id}>
             <TableCell className="truncate font-medium">{product.name}</TableCell>
-            <TableCell className="truncate text-[11px] text-muted-foreground">{product.sku}</TableCell>
-            <TableCell className="text-muted-foreground">{product.category}</TableCell>
-            <TableCell className="font-medium">{formatPrice(product.grossPrice, product.currency)}</TableCell>
+            <TableCell className="truncate text-xs text-muted-foreground">{product.sku}</TableCell>
+            <TableCell className="truncate text-muted-foreground">{product.category}</TableCell>
+            <TableCell className="truncate font-medium">{formatPrice(product.grossPrice, product.currency)}</TableCell>
             <TableCell>
               <ProductStatusBadge isAvailable={product.isAvailable} />
             </TableCell>
-            <TableCell>{formatStock(product)}</TableCell>
+            <TableCell className="truncate">{formatStock(product)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -48,25 +49,29 @@ export function ProductsTable({ products }: { products: Product[] }) {
 /** Widok mobile – karty. */
 export function ProductsCardList({ products }: { products: Product[] }) {
   return (
-    <ul className="flex flex-col gap-2.5">
+    <ul className="flex flex-col gap-2">
       {products.map((product) => (
-        <li key={product.id} className="rounded-xl border bg-card p-2.5">
-          <div className="flex items-start justify-between gap-2 px-0.5 pt-1">
-            <div className="min-w-0">
-              <p className="truncate text-[15px] font-medium">{product.name}</p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">{product.sku}</p>
+        <li key={product.id} className="flex flex-col gap-2 rounded-xl border bg-card p-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <p className="truncate text-base leading-6 font-medium">{product.name}</p>
+              <p className="truncate text-xs leading-4 text-muted-foreground">{product.sku}</p>
             </div>
             <ProductStatusBadge isAvailable={product.isAvailable} />
           </div>
-          <dl className="mt-2.5 grid grid-cols-[1fr_1fr_0.8fr] gap-2 rounded-lg bg-muted/70 p-2.5">
-            {[
-              ['Kategoria', product.category],
-              ['Cena brutto', formatPrice(product.grossPrice, product.currency)],
-              ['Magazyn', formatStock(product)],
-            ].map(([label, value]) => (
-              <div key={label} className="flex min-w-0 flex-col gap-1.5">
-                <dt className="text-[11px] text-muted-foreground">{label}</dt>
-                <dd className="truncate text-sm">{value}</dd>
+          <dl className="flex gap-1 rounded-[9px] bg-accent p-3">
+            {(
+              [
+                ['Kategoria', product.category, false],
+                ['Cena brutto', formatPrice(product.grossPrice, product.currency), true],
+                ['Magazyn', formatStock(product), false],
+              ] as const
+            ).map(([label, value, emphasized]) => (
+              <div key={label} className="flex min-w-0 flex-1 flex-col gap-1">
+                <dt className="text-xs leading-4 text-muted-foreground">{label}</dt>
+                <dd className={emphasized ? 'truncate text-sm leading-5 font-medium' : 'truncate text-sm leading-5'}>
+                  {value}
+                </dd>
               </div>
             ))}
           </dl>

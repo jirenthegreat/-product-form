@@ -8,12 +8,12 @@ export const StepAvailability = withForm({
   ...productFormOptions,
   render: function StepAvailability({ form }) {
     return (
-      <div className="flex flex-col gap-3.5">
+      <div className="flex flex-col gap-4">
         <form.Field name="isAvailable">
           {(field) => (
             <div className="flex items-center gap-2">
               <Switch id={field.name} checked={field.state.value} onCheckedChange={field.handleChange} />
-              <Label htmlFor={field.name} className="text-[13px]">
+              <Label htmlFor={field.name} className="leading-5">
                 Produkt jest dostępny
               </Label>
             </div>
@@ -38,7 +38,7 @@ export const StepAvailability = withForm({
                 checked={field.state.value}
                 onCheckedChange={(checked) => field.handleChange(checked === true)}
               />
-              <Label htmlFor={field.name} className="text-[13px] font-normal">
+              <Label htmlFor={field.name} className="leading-5">
                 Produkt limitowany
               </Label>
             </div>
@@ -67,8 +67,8 @@ export const StepAvailability = withForm({
 
         <Separator />
 
-        <fieldset className="flex flex-col gap-3.5">
-          <legend className="mb-3.5 text-[15px] font-medium">Limity koszyka</legend>
+        <fieldset className="flex flex-col">
+          <legend className="mb-4 text-base leading-6 font-medium">Limity koszyka</legend>
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Relację min ≤ max sprawdza walidator formularza, więc błąd odświeża się przy zmianie obu pól. */}
             <form.AppField name="minCartQty">

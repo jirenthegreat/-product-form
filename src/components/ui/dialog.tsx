@@ -17,7 +17,7 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        'fixed inset-0 z-50 bg-overlay backdrop-blur-[2px] data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
+        'fixed inset-0 z-50 bg-overlay backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
         className,
       )}
       {...props}
@@ -37,10 +37,10 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          'fixed z-50 flex flex-col bg-card shadow-lg outline-none duration-200',
+          'fixed z-50 flex flex-col bg-card outline-none duration-200',
           'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
           // mobile: pełny ekran, desktop: wyśrodkowany modal
-          'inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:w-full sm:max-w-[628px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:zoom-out-95',
+          'inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:max-h-[calc(100dvh-2rem)] sm:w-[calc(100%-2rem)] sm:max-w-[720px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:overflow-hidden sm:rounded-[14px] sm:shadow-lg sm:ring-1 sm:ring-foreground/10 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:zoom-out-95',
           className,
         )}
         {...props}
@@ -49,7 +49,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="absolute top-4 right-4 cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-[3px] focus-visible:ring-ring/30 focus-visible:outline-none [&_svg]:size-4"
+            className="absolute top-6 right-4 cursor-pointer rounded-xs opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-[3px] focus-visible:ring-ring/30 focus-visible:outline-none [&_svg]:size-4"
           >
             <XIcon />
             <span className="sr-only">Zamknij</span>

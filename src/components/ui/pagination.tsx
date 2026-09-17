@@ -9,7 +9,7 @@ function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
 }
 
 function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) {
-  return <ul data-slot="pagination-content" className={cn('flex flex-row items-center gap-1', className)} {...props} />
+  return <ul data-slot="pagination-content" className={cn('flex flex-row items-center gap-0.5', className)} {...props} />
 }
 
 function PaginationItem(props: React.ComponentProps<'li'>) {
@@ -27,7 +27,7 @@ function PaginationButton({ className, isActive, ...props }: PaginationButtonPro
       data-active={isActive}
       className={cn(
         buttonVariants({ variant: 'ghost', size: 'icon' }),
-        'size-7 text-sm font-medium',
+        'size-8 rounded-md text-sm font-medium',
         isActive && 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
         className,
       )}
@@ -41,7 +41,7 @@ function PaginationPrevious({ className, ...props }: React.ComponentProps<'butto
     <button
       type="button"
       aria-label="Poprzednia strona"
-      className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1 px-2 font-normal text-muted-foreground', className)}
+      className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1 rounded-md pr-2.5 pl-1.5', className)}
       {...props}
     >
       <ChevronLeftIcon />
@@ -55,7 +55,7 @@ function PaginationNext({ className, ...props }: React.ComponentProps<'button'>)
     <button
       type="button"
       aria-label="Następna strona"
-      className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1 px-2', className)}
+      className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1 rounded-md pr-1.5 pl-2.5', className)}
       {...props}
     >
       <span>Dalej</span>

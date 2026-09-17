@@ -10,40 +10,47 @@ type StepperProps = {
   className?: string
 }
 
+/**
+ * Desktop: kroki w jednym rzędzie połączone linią (niebieska po ukończeniu kroku).
+ * Mobile: trzy kolumny, numer nad opisem, bez linii – zgodnie z Figmą.
+ */
 export function Stepper({ steps, currentStep, className }: StepperProps) {
   return (
-    <ol aria-label="Postęp formularza" className={cn('grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-3', className)}>
+    <ol aria-label="Postęp formularza" className={cn('flex items-center gap-4', className)}>
       {steps.map((step, index) => {
         const status = index < currentStep ? 'complete' : index === currentStep ? 'current' : 'upcoming'
+        const isLast = index === steps.length - 1
         return (
           <li
             key={step.title}
             aria-current={status === 'current' ? 'step' : undefined}
-            className="flex flex-col gap-3 sm:contents"
+            className="flex min-w-0 flex-1 items-center gap-4 sm:flex-none"
           >
-            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-2.5">
+            <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center">
               <span
                 className={cn(
-                  'flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-medium transition-colors',
-                  status === 'upcoming' ? 'border bg-muted text-muted-foreground' : 'bg-primary text-primary-foreground',
+                  'flex size-8 shrink-0 items-center justify-center rounded-full text-sm leading-5 font-semibold transition-colors',
+                  status === 'upcoming'
+                    ? 'border bg-accent text-muted-foreground'
+                    : 'bg-primary text-white',
                 )}
               >
-                {status === 'complete' ? <CheckIcon className="size-3.5" strokeWidth={2.5} aria-hidden /> : index + 1}
-                <span className="sr-only">{status === 'complete' ? ' (ukończony)' : ''}</span>
+                {status === 'complete' ? <CheckIcon className="size-4" aria-hidden /> : index + 1}
               </span>
-              <span className="flex flex-col gap-0.5">
-                <span className={cn('text-[13px] font-medium', status === 'upcoming' && 'text-muted-foreground')}>
+              <span className={cn('flex flex-col gap-0.5 whitespace-nowrap', status === 'upcoming' && 'text-muted-foreground')}>
+                <span className="text-sm leading-5 font-medium">
                   {step.title}
+                  {status === 'complete' && <span className="sr-only"> (ukończony)</span>}
                 </span>
-                <span className="text-[11px] whitespace-nowrap text-muted-foreground">{step.description}</span>
+                <span className="text-xs leading-4 text-muted-foreground">{step.description}</span>
               </span>
             </div>
-            {index < steps.length - 1 && (
+            {!isLast && (
               <span
                 aria-hidden
                 className={cn(
-                  'hidden h-px min-w-6 flex-1 transition-colors sm:block',
-                  index < currentStep ? 'bg-primary' : 'bg-border',
+                  'hidden h-px w-[67px] shrink-0 transition-colors sm:block',
+                  index < currentStep ? 'bg-primary' : 'bg-[#e4e4e4]',
                 )}
               />
             )}

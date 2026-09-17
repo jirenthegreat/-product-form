@@ -25,7 +25,7 @@ export function AddProductDialog({ onCreated }: AddProductDialogProps) {
         // Nie zamykamy formularza przypadkowym kliknięciem w tło – łatwo stracić wpisane dane.
         onInteractOutside={(event) => event.preventDefault()}
       >
-        <DialogHeader className="border-b p-3.5 pr-10">
+        <DialogHeader className="px-4 pt-6 pr-10 sm:h-16 sm:justify-center sm:border-b sm:pt-0">
           <DialogTitle>Dodaj nowy produkt</DialogTitle>
           <DialogDescription className="sr-only">Formularz dodawania produktu w trzech krokach</DialogDescription>
         </DialogHeader>

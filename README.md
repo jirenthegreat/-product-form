@@ -7,7 +7,8 @@ Zadanie rekrutacyjne: trzyetapowy formularz dodawania produktu w oknie modalnym 
 ## Stack
 
 - React 19 + TypeScript + Vite
-- [shadcn/ui](https://ui.shadcn.com) (Radix UI + Tailwind CSS v4) – komponenty w `src/components/ui`, motyw z Figmy w `src/index.css`
+- [shadcn/ui](https://ui.shadcn.com) (Radix UI + Tailwind CSS v4) – komponenty w `src/components/ui`, tokeny z Figmy w `src/index.css`
+- Geist (font z projektu)
 - [TanStack Form](https://tanstack.com/form) – stan formularza i kroki
 - [Zod](https://zod.dev) – schematy walidacji każdego kroku
 - [nuqs](https://nuqs.dev) – numer strony tabeli w parametrze `?page=`
@@ -68,4 +69,5 @@ src/
 - **Przeliczanie cen.** Listenery pól `netPrice` / `grossPrice` / `vatRate` przeliczają drugie pole wg wzoru `brutto = netto × (1 + VAT/100)`. Przeliczona wartość jest ustawiana z `dontRunListeners`, więc nie ma pętli. Ukryte pole `priceSource` pamięta, które pole użytkownik edytował ostatnio: zmiana VAT przelicza to drugie. Kwoty są zaokrąglane do groszy.
 - **Reset dialogu.** Radix odmontowuje zawartość zamkniętego dialogu, więc każde otwarcie tworzy świeży formularz (krok 1, wartości domyślne). Kliknięcie w tło nie zamyka modala, żeby nie stracić danych przypadkiem. Zamykają go X i Esc.
 - **Paginacja.** `useQueryState('page', parseAsInteger.withDefault(1))`, 5 produktów na stronę. Numer spoza zakresu jest przycinany. Produkty są zapisywane w localStorage, dzięki czemu odświeżenie zachowuje cały widok, łącznie z dodanymi produktami.
+- **Zgodność z Figmą.** Kolory, typografia, odstępy i zaokrąglenia są wzięte bezpośrednio z pliku Figma (neutralna paleta shadcn, `blue-600` jako kolor główny, font Geist). Wymiary dialogów na desktopie (546 / 370 / 440 px) zgadzają się z projektem co do piksela. Pole „Stawka VAT” jest selectem zgodnie ze specyfikacją, choć w Figmie wygląda jak input, a etykieta nad opisem to „Opis” (w projekcie jest tam zdublowana „Nazwa produktu”).
 - **RWD.** Na desktopie jest tabela i wyśrodkowany modal. Na mobile są karty i pełnoekranowy dialog ze stepperem w kolumnach (zgodnie z Figmą).

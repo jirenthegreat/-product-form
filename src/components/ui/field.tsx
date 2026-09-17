@@ -28,7 +28,7 @@ function Field({
 }
 
 function FieldLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
-  return <Label data-slot="field-label" className={cn('text-[13px] text-foreground', className)} {...props} />
+  return <Label data-slot="field-label" className={cn('leading-5 text-foreground', className)} {...props} />
 }
 
 function FieldDescription({ className, ...props }: React.ComponentProps<'p'>) {

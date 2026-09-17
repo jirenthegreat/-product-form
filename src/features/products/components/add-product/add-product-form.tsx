@@ -58,24 +58,28 @@ export function AddProductForm({ onCreated }: AddProductFormProps) {
         void form.handleSubmit()
       }}
     >
-      <Stepper steps={STEPS} currentStep={step} className="border-b px-3.5 py-4 sm:py-3" />
+      <Stepper
+        steps={STEPS}
+        currentStep={step}
+        className="mx-4 mt-4 border-y py-6 sm:mx-0 sm:mt-0 sm:h-[62px] sm:border-t-0 sm:px-4 sm:py-0"
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:py-5">
         {step === 0 && <StepBasicInfo form={form} />}
         {step === 1 && <StepPricing form={form} />}
         {step === 2 && <StepAvailability form={form} />}
       </div>
 
-      <div className="flex items-center gap-2 border-t p-3.5">
+      <div className="flex h-[68px] shrink-0 items-center gap-2 border-t bg-background px-4">
         {step > 0 && (
-          <Button type="button" variant="outline" size="sm" onClick={() => setStep((current) => current - 1)}>
+          <Button type="button" variant="outline" onClick={() => setStep((current) => current - 1)}>
             <ArrowLeftIcon />
             Wstecz
           </Button>
         )}
         <form.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => (
-            <Button type="submit" size="sm" className="ml-auto" disabled={isSubmitting}>
+            <Button type="submit" className="ml-auto" disabled={isSubmitting}>
               {step < LAST_STEP ? (
                 <>
                   Dalej

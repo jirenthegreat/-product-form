@@ -9,7 +9,7 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        'peer size-3.5 shrink-0 cursor-pointer rounded-[4px] border border-input bg-card shadow-xs transition-shadow outline-none',
+        'peer size-4 shrink-0 cursor-pointer rounded-[4px] border border-input bg-card shadow-xs transition-shadow outline-none',
         'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30',
         'data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
         'aria-invalid:border-destructive disabled:cursor-not-allowed disabled:opacity-50',
@@ -18,7 +18,7 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
       {...props}
     >
       <CheckboxPrimitive.Indicator data-slot="checkbox-indicator" className="grid place-content-center text-current">
-        <CheckIcon className="size-3" strokeWidth={3} />
+        <CheckIcon className="size-3.5" strokeWidth={3} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   )

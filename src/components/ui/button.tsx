@@ -10,12 +10,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
-        outline: 'border bg-card shadow-xs hover:bg-accent hover:text-accent-foreground',
+        outline: 'border bg-transparent hover:bg-accent hover:text-accent-foreground',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
       },
       size: {
-        default: 'h-9 px-4 py-2 has-[>svg]:px-3.5',
-        sm: 'h-8 gap-1 px-3 text-sm has-[>svg]:px-2.5',
+        default: 'h-9 px-4 py-2',
+        sm: 'h-8 gap-1 px-3 text-sm',
         icon: 'size-8 rounded-md',
       },
     },

@@ -5,7 +5,7 @@ export default function App() {
   return (
     <>
       <ProductsPage />
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" offset={16} />
     </>
   )
 }
