@@ -25,11 +25,11 @@ export const StepPricing = withForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <form.AppField name="netPrice" listeners={{ onChange: () => recalculate('net') }}>
           {(field) => (
-            <field.NumberField label="Cena netto" placeholder="0.00" min={0} step="0.01" inputMode="decimal" autoFocus />
+            <field.NumberField label="Cena netto" placeholder="0.00" decimal autoFocus />
           )}
         </form.AppField>
         <form.AppField name="grossPrice" listeners={{ onChange: () => recalculate('gross') }}>
-          {(field) => <field.NumberField label="Cena brutto" placeholder="0.00" min={0} step="0.01" inputMode="decimal" />}
+          {(field) => <field.NumberField label="Cena brutto" placeholder="0.00" decimal />}
         </form.AppField>
         <form.AppField
           name="vatRate"

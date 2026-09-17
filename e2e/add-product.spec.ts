@@ -148,3 +148,16 @@ test('zamknięcie dialogu resetuje formularz do kroku 1', async ({ page }) => {
   await expect(page.getByLabel('Nazwa produktu')).toHaveValue('')
   await expect(page.getByRole('listitem').filter({ hasText: 'Informacje' })).toHaveAttribute('aria-current', 'step')
 })
+
+test('pola cenowe przyjmują przecinek niezależnie od języka przeglądarki', async ({ page }) => {
+  await openDialog(page)
+  await fillBasicInfo(page)
+  await next(page)
+
+  await page.getByLabel('Cena netto').fill('12,5')
+  await expect(page.getByLabel('Cena brutto')).toHaveValue('15.38')
+
+  // litery są ignorowane, a nie czyszczą pola
+  await page.getByLabel('Cena netto').fill('abc')
+  await expect(page.getByLabel('Cena netto')).toHaveValue('12,5')
+})

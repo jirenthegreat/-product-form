@@ -53,9 +53,6 @@ export const StepAvailability = withForm({
                   <field.NumberField
                     label="Ilość na magazynie"
                     placeholder="0"
-                    min={0}
-                    step={1}
-                    inputMode="numeric"
                     autoFocus
                     className="animate-in fade-in-0 slide-in-from-top-1 sm:max-w-[calc(50%-0.5rem)]"
                   />
@@ -72,10 +69,10 @@ export const StepAvailability = withForm({
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Relację min ≤ max sprawdza walidator formularza, więc błąd odświeża się przy zmianie obu pól. */}
             <form.AppField name="minCartQty">
-              {(field) => <field.NumberField label="Minimalna ilość" min={1} step={1} inputMode="numeric" />}
+              {(field) => <field.NumberField label="Minimalna ilość" />}
             </form.AppField>
             <form.AppField name="maxCartQty">
-              {(field) => <field.NumberField label="Maksymalna ilość" min={1} step={1} inputMode="numeric" />}
+              {(field) => <field.NumberField label="Maksymalna ilość" />}
             </form.AppField>
           </div>
         </fieldset>

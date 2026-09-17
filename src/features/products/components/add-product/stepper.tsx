@@ -16,7 +16,7 @@ type StepperProps = {
  */
 export function Stepper({ steps, currentStep, className }: StepperProps) {
   return (
-    <ol aria-label="Postęp formularza" className={cn('flex items-center gap-4', className)}>
+    <ol aria-label="Postęp formularza" className={cn('flex items-start gap-4 sm:items-center', className)}>
       {steps.map((step, index) => {
         const status = index < currentStep ? 'complete' : index === currentStep ? 'current' : 'upcoming'
         const isLast = index === steps.length - 1
@@ -24,7 +24,8 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
           <li
             key={step.title}
             aria-current={status === 'current' ? 'step' : undefined}
-            className="flex min-w-0 flex-1 items-center gap-4 sm:flex-none"
+            // na mobile wyrównanie do góry, żeby kółka trzymały jedną linię, gdy opis łamie się na dwie
+            className="flex min-w-0 flex-1 items-start gap-4 sm:flex-none sm:items-center"
           >
             <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center">
               <span

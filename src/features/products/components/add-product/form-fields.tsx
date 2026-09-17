@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { useFieldContext } from './form-hook-contexts'
 import { cn } from '@/lib/utils'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
@@ -5,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { parseNumberInput } from '@/features/products/lib/format'
+import { numericPattern, parseDecimal } from '@/features/products/lib/format'
 
 type Option = { value: string; label: string }
 
@@ -42,19 +44,42 @@ export function TextField({ label, className, ...props }: BaseFieldProps & React
   )
 }
 
-export function NumberField({ label, className, ...props }: BaseFieldProps & React.ComponentProps<typeof Input>) {
+export function NumberField({
+  label,
+  className,
+  decimal = false,
+  ...props
+}: BaseFieldProps & { decimal?: boolean } & React.ComponentProps<typeof Input>) {
   const { field, isInvalid, errors, errorId } = useFieldState<number | undefined>()
+  const [text, setText] = useState(() => (field.state.value ?? '').toString())
+
+  // Wartość może zmienić się poza polem (np. przeliczenie ceny) – wtedy odświeżamy tekst.
+  useEffect(() => {
+    if (parseDecimal(text) !== field.state.value) {
+      setText(field.state.value === undefined ? '' : String(field.state.value))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field.state.value])
+
+  const pattern = decimal ? numericPattern.decimal : numericPattern.integer
+
   return (
     <Field data-invalid={isInvalid} className={cn('gap-2', className)}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Input
         id={field.name}
         name={field.name}
-        type="number"
-        // ukrywamy strzałki inputa liczbowego – w projekcie ich nie ma
-        className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-        value={field.state.value ?? ''}
-        onChange={(e) => field.handleChange(parseNumberInput(e))}
+        // pole tekstowe zamiast type="number": klawiatura numeryczna na mobile,
+        // obsługa przecinka niezależnie od języka przeglądarki i brak strzałek
+        inputMode={decimal ? 'decimal' : 'numeric'}
+        autoComplete="off"
+        value={text}
+        onChange={(event) => {
+          const next = event.target.value
+          if (!pattern.test(next)) return
+          setText(next)
+          field.handleChange(parseDecimal(next))
+        }}
         onBlur={field.handleBlur}
         aria-invalid={isInvalid}
         aria-describedby={isInvalid ? errorId : undefined}

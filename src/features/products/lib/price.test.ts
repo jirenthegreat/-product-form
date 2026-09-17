@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { parseDecimal } from './format'
 import { grossToNet, netToGross, roundMoney } from './price'
 
 describe('price', () => {
@@ -22,5 +23,23 @@ describe('price', () => {
   it('zaokrąglaja do groszy', () => {
     expect(roundMoney(1.005)).toBe(1.01)
     expect(netToGross(0.1, 23)).toBe(0.12)
+  })
+})
+
+describe('parseDecimal', () => {
+  it('akceptuje przecinek i kropkę', () => {
+    expect(parseDecimal('12,5')).toBe(12.5)
+    expect(parseDecimal('12.5')).toBe(12.5)
+    expect(parseDecimal('1234')).toBe(1234)
+  })
+
+  it('zwraca undefined dla wartości niepełnych lub pustych', () => {
+    expect(parseDecimal('')).toBeUndefined()
+    expect(parseDecimal('-')).toBeUndefined()
+    expect(parseDecimal('.')).toBeUndefined()
+  })
+
+  it('traktuje „12,” jak 12 (użytkownik jest w trakcie pisania)', () => {
+    expect(parseDecimal('12,')).toBe(12)
   })
 })

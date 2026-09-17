@@ -15,9 +15,17 @@ export function pluralizeProducts(count: number) {
   return 'produktów'
 }
 
-/** Pusty input liczbowy → `undefined`, w przeciwnym razie liczba. */
-export function parseNumberInput(event: React.ChangeEvent<HTMLInputElement>): number | undefined {
-  if (event.target.value === '') return undefined
-  const value = event.target.valueAsNumber
-  return Number.isNaN(value) ? undefined : value
+/**
+ * Zamienia tekst z pola liczbowego na liczbę, akceptując przecinek i kropkę.
+ * Pole `type="number"` odrzuca przecinek, gdy przeglądarka ma lokalizację inną niż polska,
+ * dlatego pola liczbowe są tekstowe, a konwersję robimy tutaj.
+ */
+export function parseDecimal(value: string): number | undefined {
+  const normalized = value.replace(',', '.')
+  if (normalized === '' || normalized === '-' || normalized === '.' || normalized === '-.') return undefined
+  const parsed = Number(normalized)
+  return Number.isNaN(parsed) ? undefined : parsed
 }
+
+/** Wzorce dopuszczalnego tekstu w trakcie pisania (pozwalają na „12,” albo samo „-”). */
+export const numericPattern = { decimal: /^-?\d*[.,]?\d*$/, integer: /^-?\d*$/ }
