@@ -1,0 +1,45 @@
+import { useState } from 'react'
+import { PlusIcon } from 'lucide-react'
+
+import { AddProductForm } from './add-product-form'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import type { Product } from '@/features/products/model/types'
+
+type AddProductDialogProps = {
+  onCreated: (product: Product) => void
+}
+
+export function AddProductDialog({ onCreated }: AddProductDialogProps) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <PlusIcon />
+          Dodaj produkt
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        // Nie zamykamy formularza przypadkowym kliknięciem w tło – łatwo stracić wpisane dane.
+        onInteractOutside={(event) => event.preventDefault()}
+      >
+        <DialogHeader className="border-b p-3.5 pr-10">
+          <DialogTitle>Dodaj nowy produkt</DialogTitle>
+          <DialogDescription className="sr-only">Formularz dodawania produktu w trzech krokach</DialogDescription>
+        </DialogHeader>
+        {/*
+          Radix odmontowuje zawartość po zamknięciu, więc każde otwarcie tworzy świeży formularz
+          (krok 1, wartości domyślne) – to jest nasz „reset przy zamknięciu”.
+        */}
+        <AddProductForm
+          onCreated={(product) => {
+            onCreated(product)
+            setOpen(false)
+          }}
+        />
+      </DialogContent>
+    </Dialog>
+  )
+}

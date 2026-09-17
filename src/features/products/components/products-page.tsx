@@ -1,0 +1,62 @@
+import { parseAsInteger, useQueryState } from 'nuqs'
+import { toast } from 'sonner'
+
+import { AddProductDialog } from './add-product/add-product-dialog'
+import { ProductsPagination } from './products-pagination'
+import { ProductsCardList, ProductsTable } from './products-table'
+import { pluralizeProducts } from '@/features/products/lib/format'
+import { PRODUCTS_PAGE_SIZE } from '@/features/products/model/constants'
+import { useProducts } from '@/features/products/hooks/use-products'
+import type { Product } from '@/features/products/model/types'
+
+export function ProductsPage() {
+  const { products, addProduct } = useProducts()
+  const [pageParam, setPageParam] = useQueryState('page', parseAsInteger.withDefault(1))
+
+  const totalPages = Math.max(1, Math.ceil(products.length / PRODUCTS_PAGE_SIZE))
+  // Ręcznie wpisany numer strony spoza zakresu (np. ?page=99) przycinamy do dostępnych stron.
+  const page = Math.min(Math.max(1, pageParam), totalPages)
+  const visibleProducts = products.slice((page - 1) * PRODUCTS_PAGE_SIZE, page * PRODUCTS_PAGE_SIZE)
+
+  const countLabel = `${products.length} ${pluralizeProducts(products.length)}`
+  const pageSummary = `Strona ${page} z ${totalPages} · ${countLabel}`
+
+  const handleCreated = (product: Product) => {
+    addProduct(product)
+    toast.success('Produkt został dodany')
+  }
+
+  const pagination = (
+    <ProductsPagination page={page} totalPages={totalPages} onPageChange={(next) => void setPageParam(next)} />
+  )
+
+  return (
+    <main className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 px-4 py-6 sm:py-12">
+      <header className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-xl font-semibold tracking-tight">Produkty</h1>
+          <p className="text-sm text-muted-foreground">{countLabel} w katalogu</p>
+        </div>
+        <AddProductDialog onCreated={handleCreated} />
+      </header>
+
+      {/* Desktop */}
+      <section aria-label="Lista produktów" className="hidden overflow-hidden rounded-xl border sm:block">
+        <ProductsTable products={visibleProducts} />
+        <div className="flex items-center justify-between gap-4 border-t bg-background px-3.5 py-2.5">
+          <p className="text-[11px] text-muted-foreground">{pageSummary}</p>
+          {pagination}
+        </div>
+      </section>
+
+      {/* Mobile */}
+      <section aria-label="Lista produktów" className="flex flex-col gap-4 sm:hidden">
+        <ProductsCardList products={visibleProducts} />
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-[11px] text-muted-foreground">{pageSummary}</p>
+          {pagination}
+        </div>
+      </section>
+    </main>
+  )
+}

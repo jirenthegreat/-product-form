@@ -1,0 +1,85 @@
+import { productFormOptions, withForm } from './form-context'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
+
+export const StepAvailability = withForm({
+  ...productFormOptions,
+  render: function StepAvailability({ form }) {
+    return (
+      <div className="flex flex-col gap-3.5">
+        <form.Field name="isAvailable">
+          {(field) => (
+            <div className="flex items-center gap-2">
+              <Switch id={field.name} checked={field.state.value} onCheckedChange={field.handleChange} />
+              <Label htmlFor={field.name} className="text-[13px]">
+                Produkt jest dostępny
+              </Label>
+            </div>
+          )}
+        </form.Field>
+
+        <Separator />
+
+        <form.Field
+          name="isLimited"
+          listeners={{
+            onChange: ({ value }) => {
+              // Po odznaczeniu czyścimy ilość, żeby nie trafiła do produktu i nie zostawiła starego błędu.
+              if (!value) form.resetField('stock')
+            },
+          }}
+        >
+          {(field) => (
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id={field.name}
+                checked={field.state.value}
+                onCheckedChange={(checked) => field.handleChange(checked === true)}
+              />
+              <Label htmlFor={field.name} className="text-[13px] font-normal">
+                Produkt limitowany
+              </Label>
+            </div>
+          )}
+        </form.Field>
+
+        <form.Subscribe selector={(state) => state.values.isLimited}>
+          {(isLimited) =>
+            isLimited && (
+              <form.AppField name="stock">
+                {(field) => (
+                  <field.NumberField
+                    label="Ilość na magazynie"
+                    placeholder="0"
+                    min={0}
+                    step={1}
+                    inputMode="numeric"
+                    autoFocus
+                    className="animate-in fade-in-0 slide-in-from-top-1 sm:max-w-[calc(50%-0.5rem)]"
+                  />
+                )}
+              </form.AppField>
+            )
+          }
+        </form.Subscribe>
+
+        <Separator />
+
+        <fieldset className="flex flex-col gap-3.5">
+          <legend className="mb-3.5 text-[15px] font-medium">Limity koszyka</legend>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Relację min ≤ max sprawdza walidator formularza, więc błąd odświeża się przy zmianie obu pól. */}
+            <form.AppField name="minCartQty">
+              {(field) => <field.NumberField label="Minimalna ilość" min={1} step={1} inputMode="numeric" />}
+            </form.AppField>
+            <form.AppField name="maxCartQty">
+              {(field) => <field.NumberField label="Maksymalna ilość" min={1} step={1} inputMode="numeric" />}
+            </form.AppField>
+          </div>
+        </fieldset>
+      </div>
+    )
+  },
+})

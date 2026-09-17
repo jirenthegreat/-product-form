@@ -1,0 +1,93 @@
+import { useState } from 'react'
+import { standardSchemaValidators } from '@tanstack/react-form'
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
+
+import { productFormOptions, useAppForm } from './form-context'
+import { StepAvailability } from './step-availability'
+import { StepBasicInfo } from './step-basic-info'
+import { StepPricing } from './step-pricing'
+import { Stepper, type StepDefinition } from './stepper'
+import { Button } from '@/components/ui/button'
+import { productFormSchema, productFormSteps } from '@/features/products/model/product-schema'
+import { toProduct } from '@/features/products/model/to-product'
+import type { Product } from '@/features/products/model/types'
+
+const STEPS = [
+  { title: 'Informacje', description: 'Dane podstawowe' },
+  { title: 'Cena', description: 'Dane cenowe' },
+  { title: 'Dostępność', description: 'Stany magazynowe' },
+] as const satisfies readonly StepDefinition[]
+
+const LAST_STEP = STEPS.length - 1
+
+type AddProductFormProps = {
+  onCreated: (product: Product) => void
+}
+
+/**
+ * Jeden formularz dla wszystkich kroków – wartości żyją w jednym stanie, więc powrót
+ * do poprzedniego kroku nic nie gubi. Walidator formularza podmieniamy zależnie od kroku,
+ * a „Dalej” to zwykły submit: przechodzi dalej tylko przy poprawnych danych bieżącego kroku.
+ */
+export function AddProductForm({ onCreated }: AddProductFormProps) {
+  const [step, setStep] = useState(0)
+
+  const form = useAppForm({
+    ...productFormOptions,
+    validators: {
+      // Schemat bieżącego kroku waliduje tylko swoje pola; błędy trafiają do odpowiednich pól formularza.
+      onChange: ({ value }) =>
+        standardSchemaValidators.validate({ value, validationSource: 'form' }, productFormSteps[step]),
+    },
+    onSubmit: ({ value }) => {
+      if (step < LAST_STEP) {
+        setStep((current) => current + 1)
+        return
+      }
+      onCreated(toProduct(productFormSchema.parse(value)))
+    },
+  })
+
+  return (
+    <form
+      noValidate
+      className="flex min-h-0 flex-1 flex-col"
+      onSubmit={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        void form.handleSubmit()
+      }}
+    >
+      <Stepper steps={STEPS} currentStep={step} className="border-b px-3.5 py-4 sm:py-3" />
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
+        {step === 0 && <StepBasicInfo form={form} />}
+        {step === 1 && <StepPricing form={form} />}
+        {step === 2 && <StepAvailability form={form} />}
+      </div>
+
+      <div className="flex items-center gap-2 border-t p-3.5">
+        {step > 0 && (
+          <Button type="button" variant="outline" size="sm" onClick={() => setStep((current) => current - 1)}>
+            <ArrowLeftIcon />
+            Wstecz
+          </Button>
+        )}
+        <form.Subscribe selector={(state) => state.isSubmitting}>
+          {(isSubmitting) => (
+            <Button type="submit" size="sm" className="ml-auto" disabled={isSubmitting}>
+              {step < LAST_STEP ? (
+                <>
+                  Dalej
+                  <ArrowRightIcon />
+                </>
+              ) : (
+                'Zapisz produkt'
+              )}
+            </Button>
+          )}
+        </form.Subscribe>
+      </div>
+    </form>
+  )
+}
