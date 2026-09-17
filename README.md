@@ -13,7 +13,9 @@ Zadanie rekrutacyjne: trzyetapowy formularz dodawania produktu w oknie modalnym 
 - [Zod](https://zod.dev) – schematy walidacji każdego kroku
 - [nuqs](https://nuqs.dev) – numer strony tabeli w parametrze `?page=`
 - sonner – toast po dodaniu produktu
-- Vitest – testy schematów i przeliczania cen
+- Vitest – testy jednostkowe (schematy Zod, przeliczanie cen, paginacja)
+- Playwright – testy E2E całego przepływu (desktop + mobile)
+- GitHub Actions – lint, typecheck i testy przy każdym pushu
 
 ## Uruchomienie
 
@@ -29,13 +31,29 @@ Pozostałe skrypty:
 ```bash
 npm run build      # typecheck + build produkcyjny
 npm run preview    # podgląd builda
-npm test           # testy jednostkowe (Vitest)
+npm run typecheck  # sprawdzenie typów
 npm run lint       # oxlint
+npm test           # testy jednostkowe (Vitest)
+npm run test:e2e   # testy E2E (Playwright)
 ```
+
+Przed pierwszym uruchomieniem testów E2E trzeba pobrać przeglądarkę: `npx playwright install chromium`.
+
+## Testy
+
+Testy E2E (`e2e/add-product.spec.ts`) sprawdzają w przeglądarce, na desktopie i mobile, dokładnie to, co jest wymagane w zadaniu:
+
+- krok 1 nie przepuszcza dalej bez poprawnych danych i pokazuje błędy przy polach,
+- ceny przeliczają się netto ⇄ brutto, a zmiana VAT przelicza właściwe pole,
+- „Wstecz” nie gubi wpisanych wartości,
+- w kroku 3 pole ilości pojawia się tylko dla produktu limitowanego, a min ≤ max,
+- zapisany produkt trafia do tabeli, a strona z URL zostaje po odświeżeniu,
+- zamknięcie dialogu resetuje formularz do kroku 1.
 
 ## Struktura
 
 ```
+e2e/                              # testy E2E (Playwright)
 src/
 ├─ components/ui/                 # komponenty shadcn/ui dostosowane do projektu
 └─ features/products/
@@ -45,7 +63,7 @@ src/
    │  ├─ types.ts                 # typy produktu i wartości formularza
    │  ├─ to-product.ts            # mapowanie danych z formularza na produkt
    │  └─ mock-products.ts         # 5 przykładowych produktów
-   ├─ lib/                        # przeliczanie cen (+ testy), formatowanie
+   ├─ lib/                        # przeliczanie cen, paginacja, formatowanie (+ testy)
    ├─ hooks/use-products.ts       # lista produktów (zapis w localStorage)
    └─ components/
       ├─ products-page.tsx        # strona: nagłówek, tabela/karty, paginacja (nuqs)

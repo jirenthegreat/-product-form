@@ -26,8 +26,8 @@ export const basicInfoSchema = z.object({
     .max(24, 'SKU może mieć maksymalnie 24 znaki')
     .regex(/^[A-Za-z0-9]+$/, 'SKU może zawierać tylko litery i cyfry'),
   description: z.string().trim(),
-  manufacturer: oneOf(MANUFACTURERS, 'Wybierz producenta'),
-  category: oneOf(CATEGORIES, 'Wybierz kategorię'),
+  manufacturer: oneOf(MANUFACTURERS, 'Producent jest wymagany'),
+  category: oneOf(CATEGORIES, 'Kategoria jest wymagana'),
   features: z
     .array(oneOf(FEATURES, 'Nieznana cecha'))
     .min(1, 'Wybierz co najmniej jedną cechę'),

@@ -36,8 +36,8 @@ describe('basicInfoSchema', () => {
 
   it('wymaga producenta, kategorii i co najmniej jednej cechy', () => {
     const result = basicInfoSchema.safeParse({ ...validBasic, manufacturer: '', category: 'X', features: [] })
-    expect(messagesFor(result, 'manufacturer')).toEqual(['Wybierz producenta'])
-    expect(messagesFor(result, 'category')).toEqual(['Wybierz kategorię'])
+    expect(messagesFor(result, 'manufacturer')).toEqual(['Producent jest wymagany'])
+    expect(messagesFor(result, 'category')).toEqual(['Kategoria jest wymagana'])
     expect(messagesFor(result, 'features')).toEqual(['Wybierz co najmniej jedną cechę'])
   })
 })

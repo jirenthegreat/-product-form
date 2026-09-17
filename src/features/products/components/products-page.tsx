@@ -41,7 +41,7 @@ export function ProductsPage() {
       </header>
 
       {/* Desktop */}
-      <section aria-label="Lista produktów" className="hidden overflow-hidden rounded-lg border bg-card shadow-xs sm:block">
+      <section aria-label="Lista produktów" role="region" className="hidden overflow-hidden rounded-lg border bg-card shadow-xs sm:block">
         <ProductsTable products={visibleProducts} />
         <div className="flex items-center justify-between gap-4 border-t bg-table-muted p-4">
           <p className="text-xs leading-4 text-muted-foreground">{pageSummary}</p>
@@ -50,7 +50,7 @@ export function ProductsPage() {
       </section>
 
       {/* Mobile */}
-      <section aria-label="Lista produktów" className="flex flex-col gap-6 sm:hidden">
+      <section aria-label="Lista produktów" role="region" className="flex flex-col gap-6 sm:hidden">
         <ProductsCardList products={visibleProducts} />
         <div className="flex flex-col items-center gap-4">
           <p className="text-xs leading-4 text-muted-foreground">{pageSummary}</p>
