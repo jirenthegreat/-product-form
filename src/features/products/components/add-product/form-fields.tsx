@@ -1,39 +1,44 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { useShowAllErrors } from './step-errors-context'
-import { useFieldContext } from './form-hook-contexts'
-import { cn } from '@/lib/utils'
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { numericPattern, parseDecimal } from '@/features/products/lib/format'
+import { useShowAllErrors } from "./step-errors-context";
+import { useFieldContext } from "./form-hook-contexts";
+import { cn } from "@/lib/utils";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { numericPattern, parseDecimal } from "@/features/products/lib/format";
 
-type Option = { value: string; label: string }
+type Option = { value: string; label: string };
 
 type BaseFieldProps = {
-  label: string
-  className?: string
-}
+  label: string;
+  className?: string;
+};
 
-/**
- * An error shows once the user has typed something into the field (`isDirty`)
- * or tried to move on with an invalid step. Merely focusing and leaving an
- * empty field does not turn it red.
- */
 function useFieldState<T>() {
-  const field = useFieldContext<T>()
-  const showAllErrors = useShowAllErrors()
-  const { isDirty, isValid, errors } = field.state.meta
-  const isInvalid = !isValid && (isDirty || showAllErrors)
-  return { field, isInvalid, errors, errorId: `${field.name}-error` }
+  const field = useFieldContext<T>();
+  const showAllErrors = useShowAllErrors();
+  const { isDirty, isValid, errors } = field.state.meta;
+  const isInvalid = !isValid && (isDirty || showAllErrors);
+  return { field, isInvalid, errors, errorId: `${field.name}-error` };
 }
 
-export function TextField({ label, className, ...props }: BaseFieldProps & React.ComponentProps<typeof Input>) {
-  const { field, isInvalid, errors, errorId } = useFieldState<string>()
+export function TextField({
+  label,
+  className,
+  ...props
+}: BaseFieldProps & React.ComponentProps<typeof Input>) {
+  const { field, isInvalid, errors, errorId } = useFieldState<string>();
   return (
-    <Field data-invalid={isInvalid} className={cn('gap-2', className)}>
+    <Field data-invalid={isInvalid} className={cn("gap-2", className)}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Input
         id={field.name}
@@ -47,7 +52,7 @@ export function TextField({ label, className, ...props }: BaseFieldProps & React
       />
       {isInvalid && <FieldError id={errorId} errors={errors} />}
     </Field>
-  )
+  );
 }
 
 export function NumberField({
@@ -55,36 +60,36 @@ export function NumberField({
   className,
   decimal = false,
   ...props
-}: BaseFieldProps & { decimal?: boolean } & React.ComponentProps<typeof Input>) {
-  const { field, isInvalid, errors, errorId } = useFieldState<number | undefined>()
-  const [text, setText] = useState(() => (field.state.value ?? '').toString())
+}: BaseFieldProps & { decimal?: boolean } & React.ComponentProps<
+    typeof Input
+  >) {
+  const { field, isInvalid, errors, errorId } = useFieldState<
+    number | undefined
+  >();
+  const [text, setText] = useState(() => (field.state.value ?? "").toString());
 
-  // The value can change outside the field (e.g. a recalculated price) – refresh the text then.
   useEffect(() => {
     if (parseDecimal(text) !== field.state.value) {
-      setText(field.state.value === undefined ? '' : String(field.state.value))
+      setText(field.state.value === undefined ? "" : String(field.state.value));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [field.state.value])
+  }, [field.state.value]);
 
-  const pattern = decimal ? numericPattern.decimal : numericPattern.integer
+  const pattern = decimal ? numericPattern.decimal : numericPattern.integer;
 
   return (
-    <Field data-invalid={isInvalid} className={cn('gap-2', className)}>
+    <Field data-invalid={isInvalid} className={cn("gap-2", className)}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Input
         id={field.name}
         name={field.name}
-        // Text input instead of type="number": numeric keyboard on mobile,
-        // comma support regardless of browser locale and no spinners.
-        inputMode={decimal ? 'decimal' : 'numeric'}
+        inputMode={decimal ? "decimal" : "numeric"}
         autoComplete="off"
         value={text}
         onChange={(event) => {
-          const next = event.target.value
-          if (!pattern.test(next)) return
-          setText(next)
-          field.handleChange(parseDecimal(next))
+          const next = event.target.value;
+          if (!pattern.test(next)) return;
+          setText(next);
+          field.handleChange(parseDecimal(next));
         }}
         onBlur={field.handleBlur}
         aria-invalid={isInvalid}
@@ -93,19 +98,21 @@ export function NumberField({
       />
       {isInvalid && <FieldError id={errorId} errors={errors} />}
     </Field>
-  )
+  );
 }
 
-export function TextareaField({ label, className, ...props }: BaseFieldProps & React.ComponentProps<typeof Textarea>) {
-  const { field, isInvalid, errors, errorId } = useFieldState<string>()
+export function TextareaField({
+  label,
+  className,
+  ...props
+}: BaseFieldProps & React.ComponentProps<typeof Textarea>) {
+  const { field, isInvalid, errors, errorId } = useFieldState<string>();
   return (
-    <Field data-invalid={isInvalid} className={cn('gap-2', className)}>
+    <Field data-invalid={isInvalid} className={cn("gap-2", className)}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Textarea
         id={field.name}
-        // Figma: fixed height, no resize handle
         className="resize-none"
-
         name={field.name}
         value={field.state.value}
         onChange={(e) => field.handleChange(e.target.value)}
@@ -116,28 +123,37 @@ export function TextareaField({ label, className, ...props }: BaseFieldProps & R
       />
       {isInvalid && <FieldError id={errorId} errors={errors} />}
     </Field>
-  )
+  );
 }
 
 type SelectFieldProps = BaseFieldProps & {
-  options: readonly Option[]
-  placeholder?: string
+  options: readonly Option[];
+  placeholder?: string;
   /** Lets the form keep a number while Radix Select works with strings. */
-  parse?: (value: string) => unknown
-}
+  parse?: (value: string) => unknown;
+};
 
-export function SelectField({ label, className, options, placeholder, parse }: SelectFieldProps) {
-  const { field, isInvalid, errors, errorId } = useFieldState<unknown>()
-  const value = field.state.value === '' || field.state.value == null ? '' : String(field.state.value)
+export function SelectField({
+  label,
+  className,
+  options,
+  placeholder,
+  parse,
+}: SelectFieldProps) {
+  const { field, isInvalid, errors, errorId } = useFieldState<unknown>();
+  const value =
+    field.state.value === "" || field.state.value == null
+      ? ""
+      : String(field.state.value);
   return (
-    <Field data-invalid={isInvalid} className={cn('gap-2', className)}>
+    <Field data-invalid={isInvalid} className={cn("gap-2", className)}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Select
         name={field.name}
         value={value}
         onValueChange={(next) => field.handleChange(parse ? parse(next) : next)}
         onOpenChange={(open) => {
-          if (!open) field.handleBlur()
+          if (!open) field.handleBlur();
         }}
       >
         <SelectTrigger
@@ -157,17 +173,20 @@ export function SelectField({ label, className, options, placeholder, parse }: S
       </Select>
       {isInvalid && <FieldError id={errorId} errors={errors} />}
     </Field>
-  )
+  );
 }
 
-type ToggleChipsFieldProps = BaseFieldProps & { options: readonly string[] }
+type ToggleChipsFieldProps = BaseFieldProps & { options: readonly string[] };
 
-/** Multi-select rendered as chips, as in the design. */
-export function ToggleChipsField({ label, className, options }: ToggleChipsFieldProps) {
-  const { field, isInvalid, errors, errorId } = useFieldState<string[]>()
-  const labelId = `${field.name}-label`
+export function ToggleChipsField({
+  label,
+  className,
+  options,
+}: ToggleChipsFieldProps) {
+  const { field, isInvalid, errors, errorId } = useFieldState<string[]>();
+  const labelId = `${field.name}-label`;
   return (
-    <Field data-invalid={isInvalid} className={cn('gap-2', className)}>
+    <Field data-invalid={isInvalid} className={cn("gap-2", className)}>
       <FieldLabel id={labelId} asChild>
         <span>{label}</span>
       </FieldLabel>
@@ -178,8 +197,8 @@ export function ToggleChipsField({ label, className, options }: ToggleChipsField
         className="flex-wrap"
         value={field.state.value}
         onValueChange={(next) => {
-          field.handleChange(next)
-          field.handleBlur()
+          field.handleChange(next);
+          field.handleBlur();
         }}
         aria-labelledby={labelId}
         aria-invalid={isInvalid}
@@ -189,7 +208,6 @@ export function ToggleChipsField({ label, className, options }: ToggleChipsField
           <ToggleGroupItem
             key={option}
             value={option}
-            // Figma: 26px chips, fully rounded, muted when not selected
             className="h-[26px] rounded-full border-border px-2 font-normal text-muted-foreground shadow-none data-[state=on]:border-primary data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
           >
             {option}
@@ -198,5 +216,5 @@ export function ToggleChipsField({ label, className, options }: ToggleChipsField
       </ToggleGroup>
       {isInvalid && <FieldError id={errorId} errors={errors} />}
     </Field>
-  )
+  );
 }
