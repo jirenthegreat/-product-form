@@ -6,44 +6,51 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
-import { getPageItems } from '@/features/products/lib/pagination'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/pagination";
+import { getPageItems } from "@/features/products/lib/pagination";
+import { cn } from "@/lib/utils";
 
 type ProductsPaginationProps = {
-  page: number
-  totalPages: number
-  onPageChange: (page: number) => void
-  className?: string
-}
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  className?: string;
+};
 
-/** Figma sizes: 32px items with an 8px radius (buttons elsewhere are pills). */
-const itemClass = 'size-8 rounded-md'
-const prevClass = 'h-8 rounded-md pr-2.5 pl-1.5'
-const nextClass = 'h-8 rounded-md pr-1.5 pl-2.5'
+const itemClass = "size-8 rounded-md";
+const prevClass = "h-8 rounded-md pr-2.5 pl-1.5";
+const nextClass = "h-8 rounded-md pr-1.5 pl-2.5";
 
-export function ProductsPagination({ page, totalPages, onPageChange, className }: ProductsPaginationProps) {
-  /** Links keep a real `href` (middle click works), but nuqs drives the page state. */
+export function ProductsPagination({
+  page,
+  totalPages,
+  onPageChange,
+  className,
+}: ProductsPaginationProps) {
   const linkProps = (target: number, disabled = false) => ({
     href: `?page=${target}`,
-    'aria-disabled': disabled || undefined,
+    "aria-disabled": disabled || undefined,
     onClick: (event: React.MouseEvent) => {
-      event.preventDefault()
-      if (!disabled) onPageChange(target)
+      event.preventDefault();
+      if (!disabled) onPageChange(target);
     },
-  })
+  });
 
-  const disabledClass = 'aria-disabled:pointer-events-none aria-disabled:opacity-50'
+  const disabledClass =
+    "aria-disabled:pointer-events-none aria-disabled:opacity-50";
 
   return (
-    <Pagination className={cn('mx-0 w-auto', className)}>
+    <Pagination className={cn("mx-0 w-auto", className)}>
       <PaginationContent className="gap-0.5">
         <PaginationItem>
-          <PaginationPrevious className={cn(prevClass, disabledClass)} {...linkProps(page - 1, page <= 1)} />
+          <PaginationPrevious
+            className={cn(prevClass, disabledClass)}
+            {...linkProps(page - 1, page <= 1)}
+          />
         </PaginationItem>
 
         {getPageItems(page, totalPages).map((item, index) =>
-          item === 'ellipsis' ? (
+          item === "ellipsis" ? (
             <PaginationItem key={`ellipsis-${index}`}>
               <PaginationEllipsis className="size-8" />
             </PaginationItem>
@@ -55,7 +62,8 @@ export function ProductsPagination({ page, totalPages, onPageChange, className }
                 className={cn(
                   itemClass,
                   // Figma: the active page is filled with the primary colour
-                  item === page && 'border-transparent bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
+                  item === page &&
+                    "border-transparent bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
                 )}
                 {...linkProps(item)}
               >
@@ -66,9 +74,12 @@ export function ProductsPagination({ page, totalPages, onPageChange, className }
         )}
 
         <PaginationItem>
-          <PaginationNext className={cn(nextClass, disabledClass)} {...linkProps(page + 1, page >= totalPages)} />
+          <PaginationNext
+            className={cn(nextClass, disabledClass)}
+            {...linkProps(page + 1, page >= totalPages)}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
-  )
+  );
 }

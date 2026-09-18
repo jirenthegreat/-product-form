@@ -4,16 +4,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Tokeny odwzorowane z projektu Figma */
 :root {
-  --radius: 0.625rem; /* 10px – rounded-lg z Figmy */
+  --radius: 0.625rem;
   --background: #fafafa;
   --foreground: #0a0a0a;
   --card: #ffffff;
   --card-foreground: #0a0a0a;
   --popover: #ffffff;
   --popover-foreground: #0a0a0a;
-  --primary: #2563eb; /* tailwind blue-600 */
+  --primary: #2563eb;
   --primary-foreground: #fafafa;
   --secondary: #f5f5f5;
   --secondary-foreground: #171717;
@@ -25,8 +24,8 @@
   --border: #e5e5e5;
   --input: #e5e5e5;
   --ring: #2563eb;
-  --success: #16a34a; /* tailwind green-600 */
-  --table-muted: #f9fafb; /* tailwind gray-50 – nagłówek i stopka tabeli */
+  --success: #16a34a;
+  --table-muted: #f9fafb;
   --overlay: rgb(0 0 0 / 0.5);
 }
 
