@@ -15,8 +15,8 @@ function readStoredProducts(): Product[] {
 }
 
 /**
- * Lista produktów (mock) zapisywana w localStorage – dzięki temu odświeżenie strony
- * zachowuje zarówno dodane produkty, jak i stronę paginacji z URL.
+ * Mock product list persisted in localStorage, so a page refresh keeps both the
+ * added products and the page number from the URL.
  */
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>(readStoredProducts)

@@ -5,7 +5,7 @@ import { CURRENCIES, VAT_RATES } from '@/features/products/model/constants'
 const vatOptions = VAT_RATES.map((rate) => ({ value: String(rate), label: `${rate}%` }))
 const currencyOptions = CURRENCIES.map((currency) => ({ value: currency, label: currency }))
 
-/** Przeliczone pole ustawiamy bez odpalania jego listenerów – inaczej powstałaby pętla netto ⇄ brutto. */
+/** The derived field is set without firing its listeners – otherwise net ⇄ gross would loop forever. */
 const derivedUpdate = { dontRunListeners: true } as const
 
 export const StepPricing = withForm({
@@ -33,7 +33,7 @@ export const StepPricing = withForm({
         </form.AppField>
         <form.AppField
           name="vatRate"
-          // Zmiana VAT przelicza pole, którego użytkownik nie edytował ostatnio.
+          // Changing VAT recalculates whichever price the user did not edit last.
           listeners={{ onChange: () => recalculate(form.state.values.priceSource) }}
         >
           {(field) => <field.SelectField label="Stawka VAT" options={vatOptions} parse={Number} />}

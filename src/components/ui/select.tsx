@@ -23,6 +23,7 @@ function SelectValue({
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
+// Figma: same size and shape as Input.
 function SelectTrigger({
   className,
   size = "default",

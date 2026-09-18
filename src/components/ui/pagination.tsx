@@ -8,6 +8,7 @@ import {
 
 import { buttonVariants, type Button } from "@/components/ui/button"
 
+// Labels translated to Polish; everything else is the shadcn/ui original.
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav

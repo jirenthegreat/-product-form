@@ -1,3 +1,3 @@
-// Komponenty shadcn/ui importują `cn` z pakietu `cn` (tak generuje CLI).
-// Re-eksport pod aliasem z components.json, żeby w kodzie aplikacji był jeden import.
+// shadcn/ui components import `cn` from the `cn` package (that is what the CLI generates).
+// Re-exported under the alias from components.json so the app has a single import path.
 export { cn } from 'cn'

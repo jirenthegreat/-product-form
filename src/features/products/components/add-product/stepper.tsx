@@ -11,8 +11,8 @@ type StepperProps = {
 }
 
 /**
- * Desktop: kroki w jednym rzędzie połączone linią (niebieska po ukończeniu kroku).
- * Mobile: trzy kolumny, numer nad opisem, bez linii – zgodnie z Figmą.
+ * Desktop: steps in a row joined by a line, blue once a step is done.
+ * Mobile: three columns with the number above the label and no lines, as in the design.
  */
 export function Stepper({ steps, currentStep, className }: StepperProps) {
   return (
@@ -24,7 +24,7 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
           <li
             key={step.title}
             aria-current={status === 'current' ? 'step' : undefined}
-            // na mobile wyrównanie do góry, żeby kółka trzymały jedną linię, gdy opis łamie się na dwie
+            // top-aligned on mobile so the circles stay in line when a label wraps to two rows
             className="flex min-w-0 flex-1 items-start gap-4 sm:flex-none sm:items-center"
           >
             <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center">

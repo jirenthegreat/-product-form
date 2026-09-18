@@ -1,107 +1,60 @@
 # Produkty – wieloetapowy formularz dodawania produktu
 
-Zadanie rekrutacyjne: trzyetapowy formularz dodawania produktu w oknie modalnym oraz tabela produktów z paginacją trzymaną w URL.
+Trzyetapowy formularz w oknie modalnym oraz tabela produktów z paginacją trzymaną w URL.
 
 **Demo:** _link do Vercela_
 
 ## Stack
 
 - React 19 + TypeScript + Vite
-- [shadcn/ui](https://ui.shadcn.com) (Radix UI + Tailwind CSS v4) – komponenty dodane przez `npx shadcn add`, tokeny z Figmy w `src/index.css`
-- Geist (font z projektu)
-- [TanStack Form](https://tanstack.com/form) – stan formularza i kroki
-- [Zod](https://zod.dev) – schematy walidacji każdego kroku
-- [nuqs](https://nuqs.dev) – numer strony tabeli w parametrze `?page=`
+- shadcn/ui (Radix UI + Tailwind CSS v4), tokeny z Figmy w `src/index.css`
+- TanStack Form – stan formularza i kroki
+- Zod – schematy walidacji każdego kroku
+- nuqs – numer strony w parametrze `?page=`
 - sonner – toast po dodaniu produktu
-- Vitest – testy jednostkowe (schematy Zod, przeliczanie cen, paginacja)
-- Playwright – testy E2E całego przepływu (desktop + mobile)
-- GitHub Actions – lint, typecheck i testy przy każdym pushu
+- Vitest i Playwright, uruchamiane w GitHub Actions
 
 ## Uruchomienie
-
-Wymagany Node.js 20.19+ (lub 22.12+).
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
 ```
 
-Pozostałe skrypty:
-
 ```bash
 npm run build      # typecheck + build produkcyjny
-npm run preview    # podgląd builda
-npm run typecheck  # sprawdzenie typów
 npm run lint       # oxlint
-npm test           # testy jednostkowe (Vitest)
-npm run test:e2e   # testy E2E (Playwright)
+npm test           # testy jednostkowe
+npm run test:e2e   # testy E2E (wcześniej: npx playwright install chromium)
 ```
-
-Przed pierwszym uruchomieniem testów E2E trzeba pobrać przeglądarkę: `npx playwright install chromium`.
-
-## Testy
-
-Testy E2E (`e2e/add-product.spec.ts`) sprawdzają w przeglądarce, na desktopie i mobile, dokładnie to, co jest wymagane w zadaniu:
-
-- krok 1 nie przepuszcza dalej bez poprawnych danych i pokazuje błędy przy polach,
-- ceny przeliczają się netto ⇄ brutto, a zmiana VAT przelicza właściwe pole,
-- „Wstecz” nie gubi wpisanych wartości,
-- w kroku 3 pole ilości pojawia się tylko dla produktu limitowanego, a min ≤ max,
-- zapisany produkt trafia do tabeli, a strona z URL zostaje po odświeżeniu,
-- zamknięcie dialogu resetuje formularz do kroku 1.
 
 ## Struktura
 
 ```
-e2e/                              # testy E2E (Playwright)
+e2e/                          # testy E2E
 src/
-├─ components/ui/                 # komponenty shadcn/ui dostosowane do projektu
+├─ components/ui/             # komponenty shadcn/ui
 └─ features/products/
-   ├─ model/
-   │  ├─ constants.ts             # predefiniowane listy (producenci, kategorie, VAT…)
-   │  ├─ product-schema.ts        # schematy Zod dla kroków 1–3 (+ testy)
-   │  ├─ types.ts                 # typy produktu i wartości formularza
-   │  ├─ to-product.ts            # mapowanie danych z formularza na produkt
-   │  └─ mock-products.ts         # 5 przykładowych produktów
-   ├─ lib/                        # przeliczanie cen, paginacja, formatowanie (+ testy)
-   ├─ hooks/use-products.ts       # lista produktów (zapis w localStorage)
+   ├─ model/                  # typy, schematy Zod, dane mockowe
+   ├─ lib/                    # przeliczanie cen, paginacja, formatowanie
+   ├─ hooks/                  # lista produktów
    └─ components/
-      ├─ products-page.tsx        # strona: nagłówek, tabela/karty, paginacja (nuqs)
-      ├─ products-table.tsx       # tabela (desktop) i karty (mobile)
-      ├─ products-pagination.tsx
-      └─ add-product/
-         ├─ add-product-dialog.tsx
-         ├─ add-product-form.tsx  # logika kroków
-         ├─ stepper.tsx
-         ├─ step-*.tsx            # kroki formularza (withForm)
-         ├─ form-context.ts       # createFormHook → useAppForm / withForm
-         └─ form-fields.tsx       # pola połączone z TanStack Form
+      ├─ products-page.tsx    # strona: nagłówek, tabela/karty, paginacja
+      └─ add-product/         # dialog, kroki formularza, pola
 ```
-
-## shadcn/ui
-
-Komponenty w `src/components/ui` pochodzą z CLI (`npx shadcn@latest add button input textarea label select checkbox switch dialog table badge separator sonner field toggle-group pagination`) i zachowują oryginalne API oraz warianty.
-
-Zmiany w samych plikach komponentów ograniczyłem do tego, co w projekcie z Figmy obowiązuje globalnie (każda opatrzona komentarzem):
-
-- `button` – pełne zaokrąglenie i odstęp ikony 6px,
-- `input`, `select` – wysokość 32px, pełne zaokrąglenie, padding 10px,
-- `textarea` – zaokrąglenie 10px i padding 10px,
-- `table` – nagłówki wyszarzone, komórki 48px z paddingiem 16px,
-- `dialog` – pełny ekran na mobile, 720px i zaokrąglenie 14px na desktopie (paddingi ustawiają sekcje),
-- `pagination` – polskie etykiety.
-
-Wszystko pozostałe (kolory statusów, rozmiary paginacji, chipsy cech, wygląd toasta) jest ustawiane przez `className` w miejscu użycia, żeby komponenty bazowe zostały jak najbliżej oryginału.
 
 ## Kluczowe decyzje
 
-- **Jeden formularz na wszystkie kroki.** Wszystkie wartości żyją w jednym `useAppForm`, a krok to tylko to, co jest wyrenderowane. Dlatego „Wstecz” nie gubi danych.
-- **Walidacja per krok.** Walidator formularza (`onChange`) używa schematu Zod bieżącego kroku (`productFormSteps[step]`). „Dalej” to zwykły submit: `onSubmit` wywoła się tylko przy poprawnych danych kroku i wtedy zwiększa krok. Na ostatnim kroku całość jest parsowana pełnym schematem (`productFormSchema`), który zwraca już zawężone typy (`z.enum`, `z.literal`).
-- **Kiedy pokazujemy błędy.** Walidacja działa na bieżąco, ale komunikat pojawia się dopiero, gdy użytkownik coś w danym polu wpisał (`isDirty`) albo gdy kliknął „Dalej” z niekompletnym krokiem. Samo wejście i wyjście z pustego pola nie zapala czerwieni, a po kliknięciu „Dalej” podświetlone są wszystkie braki naraz. Uzupełnienie jednego pola gasi tylko jego błąd — pozostałe zostają, żeby było widać, czego jeszcze brakuje. Każde pole pokazuje jeden komunikat (w Zod służy do tego `abort`), po polsku, powiązany przez `aria-describedby`.
-- **Reguły między polami** (ilość na magazynie wymagana tylko dla produktu limitowanego, min ≤ max) są w `superRefine` z `when: () => true`. Dzięki temu pokazują się razem z innymi błędami.
-- **Pola liczbowe.** Zamiast `type="number"` są to pola tekstowe z `inputMode`. Powód: `type="number"` odrzuca przecinek, gdy przeglądarka ma język inny niż polski, więc „12,5” zamieniało się w „125”. Teraz przecinek i kropka działają tak samo, klawiatura na telefonie nadal jest numeryczna, a litery są ignorowane w trakcie pisania.
-- **Przeliczanie cen.** Listenery pól `netPrice` / `grossPrice` / `vatRate` przeliczają drugie pole wg wzoru `brutto = netto × (1 + VAT/100)`. Przeliczona wartość jest ustawiana z `dontRunListeners`, więc nie ma pętli. Ukryte pole `priceSource` pamięta, które pole użytkownik edytował ostatnio: zmiana VAT przelicza to drugie. Kwoty są zaokrąglane do groszy.
-- **Reset dialogu.** Radix odmontowuje zawartość zamkniętego dialogu, więc każde otwarcie tworzy świeży formularz (krok 1, wartości domyślne). Kliknięcie w tło nie zamyka modala, żeby nie stracić danych przypadkiem. Zamykają go X i Esc.
-- **Paginacja.** `useQueryState('page', parseAsInteger.withDefault(1))`, 5 produktów na stronę. Numer spoza zakresu jest przycinany. Produkty są zapisywane w localStorage, dzięki czemu odświeżenie zachowuje cały widok, łącznie z dodanymi produktami.
-- **Zgodność z Figmą.** Kolory, typografia, odstępy i zaokrąglenia są wzięte bezpośrednio z pliku Figma (neutralna paleta shadcn, `blue-600` jako kolor główny, font Geist). Wymiary dialogów na desktopie (546 / 370 / 440 px) zgadzają się z projektem co do piksela. Pole „Stawka VAT” jest selectem zgodnie ze specyfikacją, choć w Figmie wygląda jak input, a etykieta nad opisem to „Opis” (w projekcie jest tam zdublowana „Nazwa produktu”).
-- **RWD.** Na desktopie jest tabela i wyśrodkowany modal. Na mobile są karty i pełnoekranowy dialog ze stepperem w kolumnach (zgodnie z Figmą).
+- **Jeden formularz na wszystkie kroki.** Wartości żyją w jednym `useAppForm`, a krok decyduje tylko o tym, co jest wyrenderowane, więc „Wstecz” nie gubi danych.
+- **Walidacja per krok.** Walidator formularza dostaje schemat bieżącego kroku (`productFormSteps[step]`), a „Dalej” to zwykły submit – krok zmienia się dopiero przy poprawnych danych. Na końcu całość parsuje pełny schemat.
+- **Kiedy pokazuję błędy.** Dopiero gdy użytkownik coś w polu wpisał albo kliknął „Dalej”. Samo wejście i wyjście z pustego pola nie zapala czerwieni, a uzupełnienie jednego pola gasi tylko jego błąd.
+- **Przeliczanie cen.** `brutto = netto × (1 + VAT/100)`, liczone w listenerach pól. Przeliczona wartość jest ustawiana z `dontRunListeners`, żeby nie powstała pętla, a ukryte pole `priceSource` pamięta, którą cenę edytowano ostatnio – to ona zostaje przy zmianie VAT.
+- **Pola liczbowe to inputy tekstowe z `inputMode`.** `type="number"` odrzuca przecinek, gdy przeglądarka ma inny język niż polski, więc „12,5” zamieniało się w „125”.
+- **Reset dialogu.** Radix odmontowuje zawartość zamkniętego okna, więc każde otwarcie tworzy świeży formularz od kroku 1. Kliknięcie w tło nie zamyka okna, żeby nie stracić danych; zamykają je X i Esc.
+- **Paginacja.** `useQueryState('page', parseAsInteger.withDefault(1))`, 5 produktów na stronę, numer spoza zakresu jest przycinany. Produkty trzymam w localStorage, żeby odświeżenie zachowało cały widok.
+
+## Uwagi do projektu z Figmy
+
+- Komponenty pochodzą z `npx shadcn add`. W samych plikach zmieniałem tylko to, co w projekcie obowiązuje globalnie (zaokrąglenia, wysokości pól, paddingi tabeli, wymiary dialogu) – każda zmiana ma komentarz. Reszta różnic jest ustawiana przez `className` w miejscu użycia.
+- „Stawka VAT” jest selectem zgodnie ze specyfikacją, choć w Figmie wygląda jak zwykły input.
+- Etykieta nad polem opisu to „Opis” – w Figmie jest tam zdublowana „Nazwa produktu”.

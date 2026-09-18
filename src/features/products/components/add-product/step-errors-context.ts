@@ -1,9 +1,9 @@
 import { createContext, useContext } from 'react'
 
 /**
- * Czy pokazywać błędy wszystkich pól bieżącego kroku.
- * Ustawiane po nieudanej próbie przejścia dalej i zerowane przy zmianie kroku,
- * dzięki czemu użytkownik nie widzi czerwieni, zanim czegokolwiek nie wpisze.
+ * Whether to show errors for every field of the current step.
+ * Set after a failed attempt to move on and cleared when the step changes, so the
+ * user does not see red before typing anything.
  */
 export const StepErrorsContext = createContext(false)
 

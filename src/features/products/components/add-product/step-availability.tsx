@@ -26,7 +26,7 @@ export const StepAvailability = withForm({
           name="isLimited"
           listeners={{
             onChange: ({ value }) => {
-              // Po odznaczeniu czyścimy ilość, żeby nie trafiła do produktu i nie zostawiła starego błędu.
+              // Clearing the quantity on uncheck keeps it out of the product and drops a stale error.
               if (!value) form.resetField('stock')
             },
           }}
@@ -67,7 +67,7 @@ export const StepAvailability = withForm({
         <fieldset className="flex flex-col">
           <legend className="mb-4 text-base leading-6 font-medium">Limity koszyka</legend>
           <div className="grid gap-4 sm:grid-cols-2">
-            {/* Relację min ≤ max sprawdza walidator formularza, więc błąd odświeża się przy zmianie obu pól. */}
+            {/* min ≤ max is checked by the form-level validator, so both fields refresh together. */}
             <form.AppField name="minCartQty">
               {(field) => <field.NumberField label="Minimalna ilość" />}
             </form.AppField>

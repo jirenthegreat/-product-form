@@ -18,9 +18,9 @@ type BaseFieldProps = {
 }
 
 /**
- * Błąd pokazujemy, gdy użytkownik coś w tym polu wpisał (`isDirty`)
- * albo gdy próbował przejść dalej z niepoprawnym krokiem.
- * Samo wejście i wyjście z pustego pola nie zapala jeszcze czerwieni.
+ * An error shows once the user has typed something into the field (`isDirty`)
+ * or tried to move on with an invalid step. Merely focusing and leaving an
+ * empty field does not turn it red.
  */
 function useFieldState<T>() {
   const field = useFieldContext<T>()
@@ -59,7 +59,7 @@ export function NumberField({
   const { field, isInvalid, errors, errorId } = useFieldState<number | undefined>()
   const [text, setText] = useState(() => (field.state.value ?? '').toString())
 
-  // Wartość może zmienić się poza polem (np. przeliczenie ceny) – wtedy odświeżamy tekst.
+  // The value can change outside the field (e.g. a recalculated price) – refresh the text then.
   useEffect(() => {
     if (parseDecimal(text) !== field.state.value) {
       setText(field.state.value === undefined ? '' : String(field.state.value))
@@ -75,8 +75,8 @@ export function NumberField({
       <Input
         id={field.name}
         name={field.name}
-        // pole tekstowe zamiast type="number": klawiatura numeryczna na mobile,
-        // obsługa przecinka niezależnie od języka przeglądarki i brak strzałek
+        // Text input instead of type="number": numeric keyboard on mobile,
+        // comma support regardless of browser locale and no spinners.
         inputMode={decimal ? 'decimal' : 'numeric'}
         autoComplete="off"
         value={text}
@@ -103,7 +103,7 @@ export function TextareaField({ label, className, ...props }: BaseFieldProps & R
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Textarea
         id={field.name}
-        // w projekcie textarea ma stałą wysokość, bez uchwytu do rozciągania
+        // Figma: fixed height, no resize handle
         className="resize-none"
 
         name={field.name}
@@ -122,7 +122,7 @@ export function TextareaField({ label, className, ...props }: BaseFieldProps & R
 type SelectFieldProps = BaseFieldProps & {
   options: readonly Option[]
   placeholder?: string
-  /** Pozwala trzymać w formularzu np. liczbę, a w Radix Select string. */
+  /** Lets the form keep a number while Radix Select works with strings. */
   parse?: (value: string) => unknown
 }
 
@@ -162,7 +162,7 @@ export function SelectField({ label, className, options, placeholder, parse }: S
 
 type ToggleChipsFieldProps = BaseFieldProps & { options: readonly string[] }
 
-/** Multi-select w formie „chipsów” – zgodnie z projektem. */
+/** Multi-select rendered as chips, as in the design. */
 export function ToggleChipsField({ label, className, options }: ToggleChipsFieldProps) {
   const { field, isInvalid, errors, errorId } = useFieldState<string[]>()
   const labelId = `${field.name}-label`
@@ -189,7 +189,7 @@ export function ToggleChipsField({ label, className, options }: ToggleChipsField
           <ToggleGroupItem
             key={option}
             value={option}
-            // Figma: chipsy 24px, w pełni zaokrąglone, nieaktywne wyszarzone
+            // Figma: 26px chips, fully rounded, muted when not selected
             className="h-[26px] rounded-full border-border px-2 font-normal text-muted-foreground shadow-none data-[state=on]:border-primary data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
           >
             {option}

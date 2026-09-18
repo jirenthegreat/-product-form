@@ -17,13 +17,13 @@ type ProductsPaginationProps = {
   className?: string
 }
 
-/** Rozmiary z Figmy: elementy 32px i zaokrąglenie 8px (przyciski w projekcie są „pigułkami”). */
+/** Figma sizes: 32px items with an 8px radius (buttons elsewhere are pills). */
 const itemClass = 'size-8 rounded-md'
 const prevClass = 'h-8 rounded-md pr-2.5 pl-1.5'
 const nextClass = 'h-8 rounded-md pr-1.5 pl-2.5'
 
 export function ProductsPagination({ page, totalPages, onPageChange, className }: ProductsPaginationProps) {
-  /** Linki mają poprawny `href` (działa środkowy przycisk myszy), ale stroną steruje nuqs. */
+  /** Links keep a real `href` (middle click works), but nuqs drives the page state. */
   const linkProps = (target: number, disabled = false) => ({
     href: `?page=${target}`,
     'aria-disabled': disabled || undefined,
@@ -54,7 +54,7 @@ export function ProductsPagination({ page, totalPages, onPageChange, className }
                 aria-label={`Strona ${item}`}
                 className={cn(
                   itemClass,
-                  // aktywna strona w projekcie jest wypełniona kolorem głównym
+                  // Figma: the active page is filled with the primary colour
                   item === page && 'border-transparent bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
                 )}
                 {...linkProps(item)}

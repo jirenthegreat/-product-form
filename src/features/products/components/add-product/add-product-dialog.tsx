@@ -22,17 +22,17 @@ export function AddProductDialog({ onCreated }: AddProductDialogProps) {
         </Button>
       </DialogTrigger>
       <DialogContent
-        // Nie zamykamy formularza przypadkowym kliknięciem w tło – łatwo stracić wpisane dane.
+        // A stray click outside must not close the form – it would throw away what was typed.
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader className="px-4 pt-6 pr-10 sm:h-16 sm:justify-center sm:border-b sm:pt-0">
-          {/* Figma: tytuł 16px / medium (shadcn domyślnie daje 18px / semibold) */}
+          {/* Figma: 16px / medium title (shadcn defaults to 18px / semibold) */}
           <DialogTitle className="text-base font-medium">Dodaj nowy produkt</DialogTitle>
           <DialogDescription className="sr-only">Formularz dodawania produktu w trzech krokach</DialogDescription>
         </DialogHeader>
         {/*
-          Radix odmontowuje zawartość po zamknięciu, więc każde otwarcie tworzy świeży formularz
-          (krok 1, wartości domyślne) – to jest nasz „reset przy zamknięciu”.
+          Radix unmounts the content when the dialog closes, so every open creates a fresh form
+          (step 1, default values) – that is the "reset on close" required by the task.
         */}
         <AddProductForm
           onCreated={(product) => {

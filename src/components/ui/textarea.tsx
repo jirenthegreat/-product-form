@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "cn"
 
+// Figma: 10px radius and padding.
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
     <textarea

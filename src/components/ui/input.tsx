@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "cn"
 
+// Figma: 32px tall, fully rounded, 10px horizontal padding.
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input

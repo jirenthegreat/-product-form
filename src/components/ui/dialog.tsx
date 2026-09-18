@@ -59,8 +59,8 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          // Figma: na mobile dialog zajmuje caly ekran, na desktopie ma 720px i zaokraglenie 14px.
-          // Paddingi ustawiaja sekcje (naglowek, stepper, tresc, stopka), dlatego bez p-6 i gap-4.
+          // Figma: full screen on mobile, 720px wide with a 14px radius on desktop.
+          // Padding is handled by the sections (header, stepper, content, footer), hence no p-6 / gap-4 here.
           "fixed inset-0 z-50 flex flex-col bg-background duration-200 outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0",
           "sm:inset-auto sm:top-1/2 sm:left-1/2 sm:max-h-[calc(100dvh-2rem)] sm:w-[calc(100%-2rem)] sm:max-w-[720px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:overflow-hidden sm:rounded-[14px] sm:shadow-lg sm:ring-1 sm:ring-foreground/10 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
           className

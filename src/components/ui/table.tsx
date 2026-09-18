@@ -64,6 +64,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
+// Figma: muted headers, 48px rows with 16px padding.
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th

@@ -14,13 +14,13 @@ export type Product = {
   currency: Currency
   isAvailable: boolean
   isLimited: boolean
-  /** `null`, gdy produkt nie jest limitowany */
+  /** `null` when the product is not limited */
   stock: number | null
   minCartQty: number
   maxCartQty: number
 }
 
-/** Wartości formularza – pola liczbowe mogą być chwilowo puste. */
+/** Form values – numeric fields can be temporarily empty. */
 export type ProductFormValues = {
   name: string
   sku: string
@@ -32,7 +32,7 @@ export type ProductFormValues = {
   grossPrice: number | undefined
   vatRate: number
   currency: string
-  /** Które pole ceny użytkownik edytował ostatnio – decyduje, co przeliczyć po zmianie VAT. */
+  /** Which price the user edited last – decides what gets recalculated when the VAT rate changes. */
   priceSource: 'net' | 'gross'
   isAvailable: boolean
   isLimited: boolean

@@ -14,7 +14,7 @@ export function ProductsPage() {
   const [pageParam, setPageParam] = useQueryState('page', parseAsInteger.withDefault(1))
 
   const totalPages = Math.max(1, Math.ceil(products.length / PRODUCTS_PAGE_SIZE))
-  // Ręcznie wpisany numer strony spoza zakresu (np. ?page=99) przycinamy do dostępnych stron.
+  // A page number typed by hand (e.g. ?page=99) is clamped to the available pages.
   const page = Math.min(Math.max(1, pageParam), totalPages)
   const visibleProducts = products.slice((page - 1) * PRODUCTS_PAGE_SIZE, page * PRODUCTS_PAGE_SIZE)
 
@@ -40,7 +40,6 @@ export function ProductsPage() {
         <AddProductDialog onCreated={handleCreated} />
       </header>
 
-      {/* Desktop */}
       <section aria-label="Lista produktów" role="region" className="hidden overflow-hidden rounded-lg border bg-card shadow-xs sm:block">
         <ProductsTable products={visibleProducts} />
         <div className="flex items-center justify-between gap-4 border-t bg-table-muted p-4">
@@ -49,7 +48,6 @@ export function ProductsPage() {
         </div>
       </section>
 
-      {/* Mobile */}
       <section aria-label="Lista produktów" role="region" className="flex flex-col gap-6 sm:hidden">
         <ProductsCardList products={visibleProducts} />
         <div className="flex flex-col items-center gap-4">

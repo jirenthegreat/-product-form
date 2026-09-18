@@ -12,7 +12,7 @@ export default function App() {
         offset={16}
         icons={{ success: <CircleCheckIcon className="size-5 fill-success text-white" /> }}
         toastOptions={{
-          // wymiary i cień toasta z Figmy
+          // Figma: toast width and shadow
           classNames: { toast: '!w-[336px] !gap-2 !rounded-md !p-4 !font-sans !shadow-toast', title: '!text-sm !font-medium' },
         }}
       />

@@ -26,19 +26,19 @@ type AddProductFormProps = {
 }
 
 /**
- * Jeden formularz dla wszystkich kroków – wartości żyją w jednym stanie, więc powrót
- * do poprzedniego kroku nic nie gubi. Walidator formularza podmieniamy zależnie od kroku,
- * a „Dalej” to zwykły submit: przechodzi dalej tylko przy poprawnych danych bieżącego kroku.
+ * One form for every step: all values live in a single state, so going back loses nothing.
+ * The form validator is swapped per step and "Dalej" is a plain submit, which means the step
+ * only advances when the current step is valid.
  */
 export function AddProductForm({ onCreated }: AddProductFormProps) {
   const [step, setStep] = useState(0)
-  // po nieudanej próbie przejścia dalej pokazujemy błędy wszystkich pól kroku
+  // after a failed attempt to move on, show errors for every field of the step
   const [showAllErrors, setShowAllErrors] = useState(false)
 
   const form = useAppForm({
     ...productFormOptions,
     validators: {
-      // Schemat bieżącego kroku waliduje tylko swoje pola; błędy trafiają do odpowiednich pól formularza.
+      // The current step's schema validates only its own fields; errors land on the matching form fields.
       onChange: ({ value }) =>
         standardSchemaValidators.validate({ value, validationSource: 'form' }, productFormSteps[step]),
     },

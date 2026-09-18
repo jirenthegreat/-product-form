@@ -3,10 +3,10 @@ const moneyFormatter = new Intl.NumberFormat('pl-PL', {
   maximumFractionDigits: 2,
 })
 
-/** „9999,00 PLN” – zgodnie z projektem kod waluty po kwocie. */
+/** "9999,00 PLN" – currency code after the amount, as in the design. */
 export const formatPrice = (value: number, currency: string) => `${moneyFormatter.format(value)} ${currency}`
 
-/** Polska odmiana: 1 produkt, 2 produkty, 5 produktów. */
+/** Polish plural forms: 1 produkt, 2 produkty, 5 produktów. */
 export function pluralizeProducts(count: number) {
   const mod10 = count % 10
   const mod100 = count % 100
@@ -16,9 +16,9 @@ export function pluralizeProducts(count: number) {
 }
 
 /**
- * Zamienia tekst z pola liczbowego na liczbę, akceptując przecinek i kropkę.
- * Pole `type="number"` odrzuca przecinek, gdy przeglądarka ma lokalizację inną niż polska,
- * dlatego pola liczbowe są tekstowe, a konwersję robimy tutaj.
+ * Parses a numeric input, accepting both a comma and a dot.
+ * `type="number"` rejects the comma unless the browser locale is Polish, so the
+ * numeric fields are plain text inputs and the conversion happens here.
  */
 export function parseDecimal(value: string): number | undefined {
   const normalized = value.replace(',', '.')
@@ -27,5 +27,5 @@ export function parseDecimal(value: string): number | undefined {
   return Number.isNaN(parsed) ? undefined : parsed
 }
 
-/** Wzorce dopuszczalnego tekstu w trakcie pisania (pozwalają na „12,” albo samo „-”). */
+/** Patterns accepted while typing (they allow "12," or a lone "-"). */
 export const numericPattern = { decimal: /^-?\d*[.,]?\d*$/, integer: /^-?\d*$/ }

@@ -2,11 +2,11 @@ import { z } from 'zod'
 
 import { CATEGORIES, CURRENCIES, FEATURES, MANUFACTURERS, VAT_RATES } from './constants'
 
-/** Formularz trzyma string (np. pusty '' przed wyborem), a wynik parsowania jest zawężony do listy. */
+/** The form holds a string (empty before a choice is made); parsing narrows it down to the list. */
 const oneOf = <const T extends readonly [string, ...string[]]>(values: T, message: string) =>
   z.string().pipe(z.enum(values, { error: message }))
 
-/** Pole liczbowe, które w formularzu może być puste (`undefined`). */
+/** Numeric field that may be empty (`undefined`) while the form is being filled in. */
 const requiredNumber = (requiredMessage: string) =>
   z.number({
     error: (issue) => (issue.input === undefined ? requiredMessage : 'Wprowadź poprawną liczbę'),
@@ -15,10 +15,10 @@ const requiredNumber = (requiredMessage: string) =>
 const integer = (requiredMessage: string) =>
   requiredNumber(requiredMessage).int('Wartość musi być liczbą całkowitą')
 
-/* ---------------------------------- Krok 1 --------------------------------- */
+/* --------------------------- Step 1: basic info --------------------------- */
 
 export const basicInfoSchema = z.object({
-  // `abort` zatrzymuje dalsze reguły, żeby przy pustym polu nie pokazywać dwóch komunikatów naraz
+  // `abort` stops further checks so an empty field shows one message instead of two
   name: z
     .string()
     .trim()
@@ -38,7 +38,7 @@ export const basicInfoSchema = z.object({
     .min(1, 'Wybierz co najmniej jedną cechę'),
 })
 
-/* ---------------------------------- Krok 2 --------------------------------- */
+/* ----------------------------- Step 2: pricing ---------------------------- */
 
 export const pricingSchema = z.object({
   netPrice: requiredNumber('Cena netto jest wymagana').positive('Cena musi być większa od 0'),
@@ -47,7 +47,7 @@ export const pricingSchema = z.object({
   currency: oneOf(CURRENCIES, 'Wybierz walutę'),
 })
 
-/* ---------------------------------- Krok 3 --------------------------------- */
+/* --------------------------- Step 3: availability ------------------------- */
 
 export const availabilitySchema = z
   .object({
@@ -57,8 +57,8 @@ export const availabilitySchema = z
     minCartQty: integer('Podaj minimalną ilość').min(1, 'Minimalna ilość musi wynosić co najmniej 1'),
     maxCartQty: integer('Podaj maksymalną ilość').min(1, 'Maksymalna ilość musi wynosić co najmniej 1'),
   })
-  // `when: () => true` – reguły między polami uruchamiamy także wtedy, gdy inne pola mają błędy,
-  // dzięki czemu użytkownik widzi wszystkie problemy naraz.
+  // `when: () => true` runs cross-field rules even when other fields are invalid,
+  // so the user sees every problem at once.
   .superRefine(
     (data, ctx) => {
       if (!data.isLimited) return
@@ -81,7 +81,7 @@ export const availabilitySchema = z
 
 export const productFormSteps = [basicInfoSchema, pricingSchema, availabilitySchema] as const
 
-/** Pełny schemat – używany przy finalnym zapisie. */
+/** Full schema used when the product is finally saved. */
 export const productFormSchema = z
   .object({ ...basicInfoSchema.shape, ...pricingSchema.shape })
   .and(availabilitySchema)
