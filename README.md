@@ -2,7 +2,7 @@
 
 Trzyetapowy formularz w oknie modalnym oraz tabela produktów z paginacją trzymaną w URL.
 
-**Demo:** _link do Vercela_
+**Demo:** (https://product-form-tau.vercel.app)
 
 ## Stack
 
