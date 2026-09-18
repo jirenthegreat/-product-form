@@ -3,6 +3,7 @@ import { standardSchemaValidators } from '@tanstack/react-form'
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 
 import { productFormOptions, useAppForm } from './form-context'
+import { StepErrorsContext } from './step-errors-context'
 import { StepAvailability } from './step-availability'
 import { StepBasicInfo } from './step-basic-info'
 import { StepPricing } from './step-pricing'
@@ -31,6 +32,8 @@ type AddProductFormProps = {
  */
 export function AddProductForm({ onCreated }: AddProductFormProps) {
   const [step, setStep] = useState(0)
+  // po nieudanej próbie przejścia dalej pokazujemy błędy wszystkich pól kroku
+  const [showAllErrors, setShowAllErrors] = useState(false)
 
   const form = useAppForm({
     ...productFormOptions,
@@ -39,9 +42,11 @@ export function AddProductForm({ onCreated }: AddProductFormProps) {
       onChange: ({ value }) =>
         standardSchemaValidators.validate({ value, validationSource: 'form' }, productFormSteps[step]),
     },
+    onSubmitInvalid: () => setShowAllErrors(true),
     onSubmit: ({ value }) => {
       if (step < LAST_STEP) {
         setStep((current) => current + 1)
+        setShowAllErrors(false)
         return
       }
       onCreated(toProduct(productFormSchema.parse(value)))
@@ -65,14 +70,19 @@ export function AddProductForm({ onCreated }: AddProductFormProps) {
       />
 
       <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:py-5">
-        {step === 0 && <StepBasicInfo form={form} />}
-        {step === 1 && <StepPricing form={form} />}
-        {step === 2 && <StepAvailability form={form} />}
+        <StepErrorsContext.Provider value={showAllErrors}>
+          {step === 0 && <StepBasicInfo form={form} />}
+          {step === 1 && <StepPricing form={form} />}
+          {step === 2 && <StepAvailability form={form} />}
+        </StepErrorsContext.Provider>
       </div>
 
       <div className="flex h-[68px] shrink-0 items-center gap-2 border-t bg-background px-4">
         {step > 0 && (
-          <Button type="button" variant="outline" onClick={() => setStep((current) => current - 1)}>
+          <Button type="button" variant="outline" onClick={() => {
+              setStep((current) => current - 1)
+              setShowAllErrors(false)
+            }}>
             <ArrowLeftIcon />
             Wstecz
           </Button>

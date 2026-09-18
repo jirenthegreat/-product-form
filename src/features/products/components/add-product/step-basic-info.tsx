@@ -11,8 +11,9 @@ export const StepBasicInfo = withForm({
         <form.AppField name="name">
           {(field) => <field.TextField label="Nazwa produktu" placeholder="np. MacBook Pro 14" autoFocus />}
         </form.AppField>
+        {/* bez atrybutu maxLength – limit pilnuje schemat, żeby użytkownik zobaczył komunikat */}
         <form.AppField name="sku">
-          {(field) => <field.TextField label="SKU produktu" placeholder="np. MBP14M3PRO" maxLength={24} autoComplete="off" />}
+          {(field) => <field.TextField label="SKU produktu" placeholder="np. MBP14M3PRO" autoComplete="off" />}
         </form.AppField>
         <form.AppField name="description">
           {(field) => <field.TextareaField label="Opis" placeholder="Krótki opis produktu" className="sm:col-span-2" />}

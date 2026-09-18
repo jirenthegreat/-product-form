@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { useShowAllErrors } from './step-errors-context'
 import { useFieldContext } from './form-hook-contexts'
 import { cn } from '@/lib/utils'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
@@ -16,11 +17,16 @@ type BaseFieldProps = {
   className?: string
 }
 
-/** Błąd pokazujemy dopiero, gdy użytkownik dotknął pola albo próbował przejść dalej. */
+/**
+ * Błąd pokazujemy, gdy użytkownik coś w tym polu wpisał (`isDirty`)
+ * albo gdy próbował przejść dalej z niepoprawnym krokiem.
+ * Samo wejście i wyjście z pustego pola nie zapala jeszcze czerwieni.
+ */
 function useFieldState<T>() {
   const field = useFieldContext<T>()
-  const { isTouched, isValid, errors } = field.state.meta
-  const isInvalid = isTouched && !isValid
+  const showAllErrors = useShowAllErrors()
+  const { isDirty, isValid, errors } = field.state.meta
+  const isInvalid = !isValid && (isDirty || showAllErrors)
   return { field, isInvalid, errors, errorId: `${field.name}-error` }
 }
 

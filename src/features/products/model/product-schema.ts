@@ -18,11 +18,16 @@ const integer = (requiredMessage: string) =>
 /* ---------------------------------- Krok 1 --------------------------------- */
 
 export const basicInfoSchema = z.object({
-  name: z.string().trim().min(1, 'Nazwa produktu jest wymagana').min(3, 'Nazwa musi mieć co najmniej 3 znaki'),
+  // `abort` zatrzymuje dalsze reguły, żeby przy pustym polu nie pokazywać dwóch komunikatów naraz
+  name: z
+    .string()
+    .trim()
+    .min(1, { error: 'Nazwa produktu jest wymagana', abort: true })
+    .min(3, 'Nazwa musi mieć co najmniej 3 znaki'),
   sku: z
     .string()
     .trim()
-    .min(1, 'SKU jest wymagane')
+    .min(1, { error: 'SKU jest wymagane', abort: true })
     .max(24, 'SKU może mieć maksymalnie 24 znaki')
     .regex(/^[A-Za-z0-9]+$/, 'SKU może zawierać tylko litery i cyfry'),
   description: z.string().trim(),

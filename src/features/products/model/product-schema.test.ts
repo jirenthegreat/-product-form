@@ -82,3 +82,17 @@ describe('availabilitySchema', () => {
     expect(availabilitySchema.safeParse({ ...validAvailability, minCartQty: 1.5 }).success).toBe(false)
   })
 })
+
+describe('komunikaty', () => {
+  it('przy pustej nazwie pokazuje tylko jeden komunikat', () => {
+    expect(messagesFor(basicInfoSchema.safeParse({ ...validBasic, name: '' }), 'name')).toEqual([
+      'Nazwa produktu jest wymagana',
+    ])
+  })
+
+  it('informuje o limicie 24 znaków SKU', () => {
+    expect(messagesFor(basicInfoSchema.safeParse({ ...validBasic, sku: 'A'.repeat(25) }), 'sku')).toEqual([
+      'SKU może mieć maksymalnie 24 znaki',
+    ])
+  })
+})

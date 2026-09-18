@@ -161,3 +161,34 @@ test('pola cenowe przyjmują przecinek niezależnie od języka przeglądarki', a
   await page.getByLabel('Cena netto').fill('abc')
   await expect(page.getByLabel('Cena netto')).toHaveValue('12,5')
 })
+
+test('błędy pojawiają się po edycji pola lub po próbie przejścia dalej', async ({ page }) => {
+  await openDialog(page)
+  const alerts = page.getByRole('alert')
+
+  // samo otwarcie i pisanie w innym polu nie zapala czerwieni przy pustej nazwie
+  await expect(alerts).toHaveCount(0)
+  await page.getByLabel('SKU produktu').fill('ABC123')
+  await expect(alerts).toHaveCount(0)
+
+  // błąd dotyczy tylko edytowanego pola
+  await page.getByLabel('SKU produktu').fill('ABC-123')
+  await expect(alerts).toHaveText(['SKU może zawierać tylko litery i cyfry'])
+  await page.getByLabel('SKU produktu').fill('A'.repeat(25))
+  await expect(alerts).toHaveText(['SKU może mieć maksymalnie 24 znaki'])
+  await page.getByLabel('SKU produktu').fill('ABC123')
+  await expect(alerts).toHaveCount(0)
+
+  // „Dalej” pokazuje braki we wszystkich polach, po jednym komunikacie na pole
+  await next(page)
+  await expect(alerts).toHaveText([
+    'Nazwa produktu jest wymagana',
+    'Producent jest wymagany',
+    'Kategoria jest wymagana',
+    'Wybierz co najmniej jedną cechę',
+  ])
+
+  // uzupełnienie jednego pola gasi tylko jego błąd
+  await page.getByLabel('Nazwa produktu').fill('MacBook')
+  await expect(alerts).toHaveCount(3)
+})
